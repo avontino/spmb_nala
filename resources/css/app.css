@@ -1,0 +1,10 @@
+/* Tambahkan di resources/css/app.css atau di custom theme */
+.nik-error input {
+    border-color: rgb(239 68 68) !important;
+    color: rgb(220 38 38) !important;
+}
+
+.nik-error input:focus {
+    border-color: rgb(239 68 68) !important;
+    outline-color: rgb(239 68 68) !important;
+}

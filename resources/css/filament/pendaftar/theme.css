@@ -1,0 +1,156 @@
+@config 'tailwind.config.js';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== THEME FOR PENDAFTAR PANEL ===== */
+
+/* ===== LOGIN & REGISTER PAGE STYLING ===== */
+.fi-simple-layout {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #0ea5e9 100%) !important;
+    min-height: 100vh !important;
+}
+
+.fi-simple-main {
+    background: white !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    padding: 2rem !important;
+}
+
+/* ===== SIDEBAR BACKGROUND ===== */
+.fi-sidebar {
+    background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%) !important;
+    border-right: 1px solid rgba(59, 130, 246, 0.1) !important;
+}
+
+.dark .fi-sidebar {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+}
+
+/* ===== NAVIGATION GROUP STYLING ===== */
+.fi-sidebar-group {
+    margin: 0.5rem 0.75rem !important;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.5rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.dark .fi-sidebar-group {
+    background: rgba(30, 41, 59, 0.7) !important;
+}
+
+.fi-sidebar-group-button {
+    font-weight: 600 !important;
+    color: #1e40af !important;
+    transition: all 0.3s ease !important;
+    padding: 0.625rem 0.875rem !important;
+    border-radius: 0.5rem !important;
+}
+
+.fi-sidebar-group-button[aria-expanded="true"] {
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+.fi-sidebar-group-button[aria-expanded="true"] .fi-sidebar-group-label {
+    color: #ffffff !important;
+}
+
+.fi-sidebar-group-button[aria-expanded="true"] svg {
+    color: #ffffff !important;
+}
+
+.fi-sidebar-group-button:hover {
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* ===== ACTIVE MENU ITEM ===== */
+.fi-sidebar-item-active .fi-sidebar-item-button {
+    font-weight: 700 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-left: 4px solid #2563eb !important;
+    border-radius: 0.5rem !important;
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-label {
+    color: #1d4ed8 !important;
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-icon {
+    color: #2563eb !important;
+}
+
+/* ===== MENU ITEM HOVER ===== */
+.fi-sidebar-item-button {
+    transition: all 0.3s ease !important;
+    border-radius: 0.5rem !important;
+}
+
+.fi-sidebar-item-button:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* ===== DARK MODE ===== */
+.dark .fi-sidebar-group-button {
+    color: #93c5fd !important;
+}
+
+.dark .fi-sidebar-item-active .fi-sidebar-item-label {
+    color: #93c5fd !important;
+}
+
+/* ===== MAIN CONTENT ===== */
+.fi-main {
+    background: linear-gradient(135deg, #fafbff 0%, #f1f5f9 100%) !important;
+}
+
+.dark .fi-main {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+}
+
+/* ===== SECTION STYLING ===== */
+.fi-section {
+    background: white !important;
+    border: 1px solid rgba(59, 130, 246, 0.08) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark .fi-section {
+    background: #1e293b !important;
+}
+
+.fi-section-header {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ===== BUTTON STYLING ===== */
+.fi-btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+.fi-btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+}
+
+/* ===== PAGE HEADER ===== */
+.fi-header-heading {
+    color: #1e40af !important;
+    font-weight: 700 !important;
+}
+
+/* ===== SCROLLBAR ===== */
+.fi-sidebar::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.fi-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.3) !important;
+    border-radius: 3px !important;
+}

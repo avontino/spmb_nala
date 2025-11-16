@@ -37,7 +37,7 @@ class RejectedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Pendaftaran Anda perlu Ditolak')
+                    ->subject('Pendaftaran Anda Ditolak')
                     ->line('Pendaftaran Anda dengan nomor '.$this->data['nomor_pendaftaran'].' telah ditolak.')
                     ->line('Alasan penolakan: '.$this->data['catatan_revisi'])
                     ->action('Lihat Detail', route('filament.pendaftar.resources.pendaftarans.index'))

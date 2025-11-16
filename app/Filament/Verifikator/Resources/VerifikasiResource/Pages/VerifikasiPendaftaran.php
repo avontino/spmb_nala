@@ -22,6 +22,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\NeedReviseNotification;
+use App\Notifications\ApprovedNotification;
+use App\Notifications\RejectedNotification;
 
 class VerifikasiPendaftaran extends Page implements HasForms
 {
@@ -943,6 +946,12 @@ class VerifikasiPendaftaran extends Page implements HasForms
                 ->success()
                 ->body('Pendaftar akan mendapatkan notifikasi.')
                 ->send();
+            
+            $emailData = [
+                'nomor_pendaftaran' => $this->record->nomor_pendaftaran,
+                'catatan_revisi' => null,
+            ];
+            $this->record->user->notify((new ApprovedNotification($emailData))->delay(now()->addSeconds(10)));
 
             $this->redirect(VerifikasiResource::getUrl('index'));
             
@@ -986,6 +995,13 @@ class VerifikasiPendaftaran extends Page implements HasForms
                 ->body('Pendaftar akan menerima notifikasi.')
                 ->send();
 
+            // send notification to the registrant, use queue job
+            $emailData = [
+                'nomor_pendaftaran' => $this->record->nomor_pendaftaran,
+                'catatan_revisi' => $data['catatan_revisi'],
+            ];
+            $this->record->user->notify((new NeedReviseNotification($emailData))->delay(now()->addSeconds(10)));
+
             $this->redirect(VerifikasiResource::getUrl('index'));
             
         } catch (\Exception $e) {
@@ -1027,6 +1043,12 @@ class VerifikasiPendaftaran extends Page implements HasForms
                 ->danger()
                 ->body('Pendaftar akan menerima notifikasi.')
                 ->send();
+            
+            $emailData = [
+                'nomor_pendaftaran' => $this->record->nomor_pendaftaran,
+                'catatan_revisi' => $data['catatan_penolakan'],
+            ];
+            $this->record->user->notify((new RejectedNotification($emailData))->delay(now()->addSeconds(10)));
 
             $this->redirect(VerifikasiResource::getUrl('index'));
             

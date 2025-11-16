@@ -47,7 +47,7 @@ return new class extends Migration
             $table->string('no_hp', 20);
             
             // Pilihan
-            $table->enum('pilihan_jurusan', ['IPA', 'IPS', 'Bahasa'])->nullable();
+            $table->string('pilihan_jurusan')->nullable();
             
             // File Upload
             $table->string('pas_foto')->nullable();

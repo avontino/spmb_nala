@@ -32,15 +32,13 @@ return new class extends Migration
                 'PNS', 
                 'Polri/TNI', 
                 'Perangkat Desa', 
-                'Nelayan', 
+                'Nelayan',
+                'Guru/Dosen',
+                'Karyawan Swasta',
+                'Dokter/Tenaga Medis', 
                 'Lainnya'
             ])->nullable();
-            $table->enum('penghasilan_ayah', [
-                '< Rp 1.000.000',
-                'Rp 1.000.000 - Rp 3.000.000',
-                'Rp 3.000.000 - Rp 5.000.000',
-                '> Rp 5.000.000'
-            ])->nullable();
+            $table->string('penghasilan_ayah')->nullable();
             
             // Data Ibu
             $table->string('nama_ibu');
@@ -64,14 +62,12 @@ return new class extends Migration
                 'Polri/TNI', 
                 'Perangkat Desa', 
                 'Nelayan', 
+                'Guru/Dosen',
+                'Karyawan Swasta',
+                'Dokter/Tenaga Medis',
                 'Lainnya'
             ])->nullable();
-            $table->enum('penghasilan_ibu', [
-                '< Rp 1.000.000',
-                'Rp 1.000.000 - Rp 3.000.000',
-                'Rp 3.000.000 - Rp 5.000.000',
-                '> Rp 5.000.000'
-            ])->nullable();
+            $table->string('penghasilan_ibu')->nullable();
             
             // Data Kontak & Wali
             $table->string('no_hp_ortu', 20)->nullable();

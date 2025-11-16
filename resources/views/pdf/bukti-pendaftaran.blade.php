@@ -314,9 +314,9 @@
                 <td>:</td>
                 <td>
                     @if($pendaftaran->status === 'submitted')
-                        <span class="status-badge status-submitted">⏳ Menunggu Verifikasi</span>
+                        <span class="status-badge status-submitted">Menunggu Verifikasi</span>
                     @elseif($pendaftaran->status === 'approved')
-                        <span class="status-badge status-approved">✅ Disetujui</span>
+                        <span class="status-badge status-approved">Disetujui</span>
                     @else
                         <span class="status-badge">{{ ucfirst($pendaftaran->status) }}</span>
                     @endif

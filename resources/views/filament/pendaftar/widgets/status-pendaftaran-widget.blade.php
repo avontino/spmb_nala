@@ -6,7 +6,7 @@
         $user = auth()->user();
         
         // ✅ GANTI DENGAN LINK WHATSAPP GROUP ANDA
-        $whatsappGroupLink = 'https://chat.whatsapp.com/XXXXXXXXXXXXXXXXX';
+        $whatsappGroupLink = 'https://chat.whatsapp.com/EpFXTPqpA12D7C7NOxVhSK';
     @endphp
 
     <div class="space-y-4">

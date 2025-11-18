@@ -15,7 +15,7 @@ return new class extends Migration
             
             $table->enum('status', ['approved', 'needs_revision', 'rejected']);
             $table->text('catatan')->nullable();
-            $table->timestamp('verified_at');
+            $table->timestamp('verified_at')->nullable();;
             
             $table->timestamps();
         });

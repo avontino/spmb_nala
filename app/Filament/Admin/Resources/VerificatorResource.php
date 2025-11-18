@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Carbon\Carbon;
 
 class VerificatorResource extends Resource
 {
@@ -31,6 +32,7 @@ class VerificatorResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $nisnVerificator = 'verificator-' . Carbon::now()->timestamp;
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nik')
@@ -50,7 +52,9 @@ class VerificatorResource extends Resource
                 Forms\Components\Hidden::make('role')
                     ->default('verifikator'),
                 Forms\Components\Hidden::make('nisn')
-                    ->default('0000000000')
+                    ->default($nisnVerificator),
+                Forms\Components\Hidden::make('nokk')
+                    ->default('0000000000'),
             ]);
     }
 

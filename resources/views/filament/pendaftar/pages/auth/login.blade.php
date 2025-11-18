@@ -1,4 +1,17 @@
 <x-filament-panels::page.simple>
+    
+    
+        @if (filament()->hasRegistration())
+        <x-slot name="subheading">
+            <div class="text-center">
+                Klik 
+                <a href="{{ filament()->getRegistrationUrl() }}" class="text-primary-600 hover:text-primary-700 font-semibold">
+                    Daftar disini
+                </a> 
+                Jika Belum Pernah Daftar
+            </div>
+        </x-slot>
+    @endif
     <x-filament-panels::form wire:submit="authenticate">
         {{ $this->form }}
 

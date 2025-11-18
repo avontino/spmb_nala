@@ -43,7 +43,8 @@ class VerifikasiResource extends Resource
                     ->label('Nama Pendaftar')
                     ->searchable()
                     ->sortable()
-                    ->default('-')
+                    // default using users name
+                    ->default(fn (Pendaftaran $record) => $record->user?->name ?? '-')
                     ->weight('medium'),
                 
                 Tables\Columns\TextColumn::make('dataPribadi.tempat_lahir')

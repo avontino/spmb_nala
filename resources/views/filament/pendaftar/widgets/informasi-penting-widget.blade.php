@@ -87,9 +87,9 @@
                             Kontak Panitia SPMB:
                         </p>
                         <p class="text-gray-700 dark:text-gray-300">
-                            📞 Telp: (0341) 2993222<br>
-                            📧 Email: ppdb@smantarunajatim.sch.id<br>
-                            💬 WhatsApp: 0812-3456-7890
+                            📞 Telp: 0341-2993222<br>
+                            📧 Email: info@smantarunajatim.sch.id<br>
+                            💬 WhatsApp: 081313085908
                         </p>
                     </div>
                 </div>

@@ -846,7 +846,7 @@ class VerifikasiPendaftaran extends Page implements HasForms
         $fields = [];
         
         foreach ($prestasi as $index => $item) {
-            $fields[] = Grid::make(3)
+            $fields[] = Grid::make(2)
                 ->schema([
                     Placeholder::make('prestasi_nama_' . $index)
                         ->label('Nama Prestasi')
@@ -855,6 +855,13 @@ class VerifikasiPendaftaran extends Page implements HasForms
                     Placeholder::make('prestasi_tingkat_' . $index)
                         ->label('Tingkat')
                         ->content($item->tingkat_prestasi),
+                        
+                   
+                ]);
+
+            $fields[] = Grid::make(1)
+                ->schema([
+                    
                         
                     ViewField::make('prestasi_bukti_' . $index)
                         ->label('Bukti')
@@ -883,7 +890,7 @@ class VerifikasiPendaftaran extends Page implements HasForms
         }
         
         return [
-            Grid::make(3)
+            Grid::make(2)
                 ->schema([
                     Placeholder::make('organisasi_nama')
                         ->label('Nama Organisasi')
@@ -892,6 +899,12 @@ class VerifikasiPendaftaran extends Page implements HasForms
                     Placeholder::make('organisasi_jabatan')
                         ->label('Jabatan')
                         ->content($organisasi->jabatan),
+                        
+                    
+                ]),
+            Grid::make(1)
+                ->schema([
+                    
                         
                     ViewField::make('organisasi_bukti')
                         ->label('Bukti')

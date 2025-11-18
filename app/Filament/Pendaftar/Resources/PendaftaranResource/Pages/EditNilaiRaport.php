@@ -130,7 +130,7 @@ class EditNilaiRaport extends EditRecord
                                         ℹ️ Keterangan untuk Siswa MTs (Madrasah Tsanawiyah)
                                     </h3>
                                     <p class="text-sm text-blue-800 dark:text-blue-200">
-                                        Untuk kolom <strong>Pend. Agama</strong>, silakan isi dengan <strong>rata-rata dari 4 mata pelajaran:</strong>
+                                        Untuk kolom <strong>Pendidikan Agama</strong>, silakan isi dengan <strong>rata-rata dari 4 mata pelajaran:</strong>
                                     </p>
                                     <ul class="list-disc list-inside text-sm text-blue-800 dark:text-blue-200 mt-1 ml-2">
                                         <li>Aqidah Akhlak</li>
@@ -157,7 +157,7 @@ class EditNilaiRaport extends EditRecord
 
                                 Grid::make(5)->schema([
                                     TextInput::make('sem1_nilai_agama')
-                                        ->label('Pend. Agama')
+                                        ->label('Pendidikan Agama')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -165,7 +165,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem1_nilai_ppkn')
-                                        ->label('PPKN')
+                                        ->label('Pendidikan Pancasila')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -213,7 +213,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem1_nilai_seni_budaya')
-                                        ->label('Seni Budaya')
+                                        ->label('Seni Budaya dan Prakarya')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -229,7 +229,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem1_nilai_prakarya')
-                                        ->label('Prakarya')
+                                        ->label('Informatika')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -254,7 +254,7 @@ class EditNilaiRaport extends EditRecord
 
                                 Grid::make(5)->schema([
                                     TextInput::make('sem2_nilai_agama')
-                                        ->label('Pend. Agama')
+                                        ->label('Pendidikan Agama')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -262,7 +262,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem2_nilai_ppkn')
-                                        ->label('PPKN')
+                                        ->label('Pendidikan Pancasila')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -310,7 +310,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem2_nilai_seni_budaya')
-                                        ->label('Seni Budaya')
+                                        ->label('Seni Budaya dan Prakarya')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -326,7 +326,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem2_nilai_prakarya')
-                                        ->label('Prakarya')
+                                        ->label('Informatika')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -351,7 +351,7 @@ class EditNilaiRaport extends EditRecord
 
                                 Grid::make(5)->schema([
                                     TextInput::make('sem3_nilai_agama')
-                                        ->label('Pend. Agama')
+                                        ->label('Pendidikan Agama')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -359,7 +359,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem3_nilai_ppkn')
-                                        ->label('PPKN')
+                                        ->label('Pendidikan Pancasila')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -407,7 +407,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem3_nilai_seni_budaya')
-                                        ->label('Seni Budaya')
+                                        ->label('Seni Budaya dan Prakarya')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -423,7 +423,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem3_nilai_prakarya')
-                                        ->label('Prakarya')
+                                        ->label('Informatika')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -448,7 +448,7 @@ class EditNilaiRaport extends EditRecord
 
                                 Grid::make(5)->schema([
                                     TextInput::make('sem4_nilai_agama')
-                                        ->label('Pend. Agama')
+                                        ->label('Pendidikan Agama')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -456,7 +456,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem4_nilai_ppkn')
-                                        ->label('PPKN')
+                                        ->label('Pendidikan Pancasila')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -504,7 +504,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem4_nilai_seni_budaya')
-                                        ->label('Seni Budaya')
+                                        ->label('Seni Budaya dan Prakarya')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -520,7 +520,7 @@ class EditNilaiRaport extends EditRecord
                                         ->live(onBlur: true),
 
                                     TextInput::make('sem4_nilai_prakarya')
-                                        ->label('Prakarya')
+                                        ->label('Informatika')
                                         ->required()
                                         ->numeric()
                                         ->minValue(0)
@@ -641,122 +641,177 @@ class EditNilaiRaport extends EditRecord
         return [];
     }
 
-    protected function afterSave(): void
-    {
-        $data = $this->form->getState();
-        
-        Log::info('💾 Saving Nilai Raport', [
-            'pendaftaran_id' => $this->record->id
-        ]);
+protected function afterSave(): void
+{
+    $data = $this->form->getState();
+    
+    Log::info('💾 Saving Nilai Raport', [
+        'pendaftaran_id' => $this->record->id,
+        'is_revision_mode' => $this->needsRevision(),
+    ]);
 
-        try {
-            DB::transaction(function () use ($data) {
-                $this->record->nilaiRaport()->delete();
+    try {
+        DB::transaction(function () use ($data) {
+            // 1. Save nilai raport
+            $this->record->nilaiRaport()->delete();
+            
+            for ($sem = 1; $sem <= 4; $sem++) {
+                $nilaiData = [
+                    'semester' => $sem,
+                    'nilai_agama' => $data["sem{$sem}_nilai_agama"] ?? null,
+                    'nilai_ppkn' => $data["sem{$sem}_nilai_ppkn"] ?? null,
+                    'nilai_bahasa_indonesia' => $data["sem{$sem}_nilai_bahasa_indonesia"] ?? null,
+                    'nilai_matematika' => $data["sem{$sem}_nilai_matematika"] ?? null,
+                    'nilai_ipa' => $data["sem{$sem}_nilai_ipa"] ?? null,
+                    'nilai_ips' => $data["sem{$sem}_nilai_ips"] ?? null,
+                    'nilai_bahasa_inggris' => $data["sem{$sem}_nilai_bahasa_inggris"] ?? null,
+                    'nilai_seni_budaya' => $data["sem{$sem}_nilai_seni_budaya"] ?? null,
+                    'nilai_pjok' => $data["sem{$sem}_nilai_pjok"] ?? null,
+                    'nilai_prakarya' => $data["sem{$sem}_nilai_prakarya"] ?? null,
+                ];
                 
-                for ($sem = 1; $sem <= 4; $sem++) {
-                    $nilaiData = [
-                        'semester' => $sem,
-                        'nilai_agama' => $data["sem{$sem}_nilai_agama"] ?? null,
-                        'nilai_ppkn' => $data["sem{$sem}_nilai_ppkn"] ?? null,
-                        'nilai_bahasa_indonesia' => $data["sem{$sem}_nilai_bahasa_indonesia"] ?? null,
-                        'nilai_matematika' => $data["sem{$sem}_nilai_matematika"] ?? null,
-                        'nilai_ipa' => $data["sem{$sem}_nilai_ipa"] ?? null,
-                        'nilai_ips' => $data["sem{$sem}_nilai_ips"] ?? null,
-                        'nilai_bahasa_inggris' => $data["sem{$sem}_nilai_bahasa_inggris"] ?? null,
-                        'nilai_seni_budaya' => $data["sem{$sem}_nilai_seni_budaya"] ?? null,
-                        'nilai_pjok' => $data["sem{$sem}_nilai_pjok"] ?? null,
-                        'nilai_prakarya' => $data["sem{$sem}_nilai_prakarya"] ?? null,
-                    ];
+                $this->record->nilaiRaport()->create($nilaiData);
+            }
+
+            // 2. Save file transkrip jika ada
+            if (isset($data['file_transkrip_nilai'])) {
+                $filePath = is_array($data['file_transkrip_nilai']) 
+                    ? ($data['file_transkrip_nilai'][0] ?? null)
+                    : $data['file_transkrip_nilai'];
                     
-                    $this->record->nilaiRaport()->create($nilaiData);
+                if ($filePath) {
+                    $this->record->dataSekolahAsal()->updateOrCreate(
+                        ['pendaftaran_id' => $this->record->id],
+                        ['file_transkrip_nilai' => $filePath]
+                    );
                 }
+            }
 
-                if (isset($data['file_transkrip_nilai'])) {
-                    $filePath = is_array($data['file_transkrip_nilai']) 
-                        ? ($data['file_transkrip_nilai'][0] ?? null)
-                        : $data['file_transkrip_nilai'];
-                        
-                    if ($filePath) {
-                        $this->record->dataSekolahAsal()->updateOrCreate(
-                            ['pendaftaran_id' => $this->record->id],
-                            ['file_transkrip_nilai' => $filePath]
-                        );
-                    }
-                }
+            $this->record->refresh();
 
-                if ($this->needsRevision()) {
-                    $verifikasi = $this->record->latestVerifikasi;
-                    if ($verifikasi) {
-                        $verifikasi->update([
-                            'nilai_raport_ok' => true,
-                        ]);
-
-                        $allFixed = $verifikasi->fresh()->data_pribadi_ok &&
-                                   $verifikasi->fresh()->data_orang_tua_ok &&
-                                   $verifikasi->fresh()->sekolah_asal_ok &&
-                                   $verifikasi->fresh()->nilai_raport_ok &&
-                                   $verifikasi->fresh()->prestasi_organisasi_ok;
-
-                        if ($allFixed) {
-                            $this->record->update([
-                                'status' => 'submitted',
-                                'submitted_at' => now(),
-                            ]);
-                        }
-                    }
-                }
-            });
-
+            // 3. ✅ HANDLE VERIFIKASI BERDASARKAN MODE
             if ($this->needsRevision()) {
-                $verifikasi = $this->record->fresh()->latestVerifikasi;
-                $allFixed = $verifikasi &&
-                           $verifikasi->data_pribadi_ok &&
-                           $verifikasi->data_orang_tua_ok &&
-                           $verifikasi->sekolah_asal_ok &&
-                           $verifikasi->nilai_raport_ok &&
-                           $verifikasi->prestasi_organisasi_ok;
+                // === MODE REVISION ===
+                // User sedang memperbaiki data yang diminta verifikator
+                $verifikasi = $this->record->latestVerifikasi;
+                
+                if ($verifikasi) {
+                    // Paksa set TRUE karena user sudah perbaiki
+                    $verifikasi->update([
+                        'nilai_raport_ok' => true,
+                    ]);
 
-                if ($allFixed) {
-                    Notification::make()
-                        ->title('✅ Semua Perbaikan Selesai!')
-                        ->success()
-                        ->body('Semua bagian sudah diperbaiki. Pendaftaran telah dikirim untuk verifikasi ulang.')
-                        ->persistent()
-                        ->send();
-                    
-                    $this->redirect(PendaftaranResource::getUrl('index'));
-                } else {
-                    Notification::make()
-                        ->title('✅ Nilai Raport Berhasil Diperbaiki!')
-                        ->success()
-                        ->body('Silakan lanjutkan memperbaiki bagian lainnya jika ada.')
-                        ->send();
-                    
-                    $this->redirect(PendaftaranResource::getUrl('index'));
+                    Log::info('✅ Revision: Set nilai_raport_ok = true', [
+                        'verifikasi_id' => $verifikasi->id,
+                    ]);
+
+                    // Cek apakah semua bagian sudah diperbaiki
+                    $verifikasi->refresh();
+                    $allFixed = $verifikasi->data_pribadi_ok &&
+                               $verifikasi->data_orang_tua_ok &&
+                               $verifikasi->sekolah_asal_ok &&
+                               $verifikasi->nilai_raport_ok &&
+                               $verifikasi->prestasi_organisasi_ok;
+
+                    if ($allFixed) {
+                        // Semua sudah diperbaiki, kembalikan ke submitted untuk reverifikasi
+                        $this->record->update([
+                            'status' => 'submitted',
+                            'submitted_at' => now(),
+                        ]);
+                        
+                        Log::info('✅ All sections fixed, status changed to submitted');
+                    }
                 }
             } else {
+                // === MODE DRAFT/NORMAL ===
+                // User sedang mengisi data biasa (belum submit atau belum ada revisi)
+                $isComplete = $this->record->isNilaiRaportComplete();
+                $verifikasi = $this->record->latestVerifikasi;
+                
+                if ($verifikasi) {
+                    // UPDATE existing verifikasi dengan hasil completeness check
+                    $verifikasi->update([
+                        'nilai_raport_ok' => $isComplete,
+                    ]);
+                    
+                    Log::info('✅ Draft: Updated existing verifikasi', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'nilai_raport_ok' => $isComplete,
+                    ]);
+                } else {
+                    // CREATE new verifikasi HANYA SEKALI (saat pertama kali save)
+                    $verifikasi = $this->record->verifikasi()->create([
+                        'verifikator_id' => null,
+                        'status' => 'pending',
+                        'data_pribadi_ok' => false,
+                        'data_orang_tua_ok' => false,
+                        'sekolah_asal_ok' => false,
+                        'nilai_raport_ok' => $isComplete,
+                        'prestasi_organisasi_ok' => false,
+                    ]);
+                    
+                    Log::info('✅ Draft: Created new verifikasi record', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'nilai_raport_ok' => $isComplete,
+                    ]);
+                }
+            }
+        });
+
+        // 4. ✅ REDIRECT BERDASARKAN MODE
+        if ($this->needsRevision()) {
+            // MODE REVISION
+            $verifikasi = $this->record->fresh()->latestVerifikasi;
+            $allFixed = $verifikasi &&
+                       $verifikasi->data_pribadi_ok &&
+                       $verifikasi->data_orang_tua_ok &&
+                       $verifikasi->sekolah_asal_ok &&
+                       $verifikasi->nilai_raport_ok &&
+                       $verifikasi->prestasi_organisasi_ok;
+
+            if ($allFixed) {
                 Notification::make()
-                    ->title('✅ Nilai Raport Tersimpan!')
+                    ->title('✅ Semua Perbaikan Selesai!')
                     ->success()
-                    ->body('Data berhasil disimpan. Melanjutkan ke Prestasi & Organisasi...')
-                    ->duration(2000)
+                    ->body('Semua bagian sudah diperbaiki. Pendaftaran telah dikirim untuk verifikasi ulang.')
+                    ->persistent()
                     ->send();
                 
-                $this->redirect(PendaftaranResource::getUrl('edit-prestasi', ['record' => $this->record]));
+                $this->redirect(PendaftaranResource::getUrl('index'));
+            } else {
+                Notification::make()
+                    ->title('✅ Nilai Raport Berhasil Diperbaiki!')
+                    ->success()
+                    ->body('Silakan lanjutkan memperbaiki bagian lainnya jika ada.')
+                    ->send();
+                
+                $this->redirect(PendaftaranResource::getUrl('index'));
             }
-                
-        } catch (\Exception $e) {
-            Log::error('❌ Error saving nilai raport: ' . $e->getMessage());
-            
+        } else {
+            // MODE DRAFT/NORMAL
             Notification::make()
-                ->title('❌ Gagal Menyimpan Data')
-                ->danger()
-                ->body('Terjadi kesalahan: ' . $e->getMessage())
+                ->title('✅ Nilai Raport Tersimpan!')
+                ->success()
+                ->body('Melanjutkan ke Prestasi & Organisasi...')
+                ->duration(2000)
                 ->send();
-                
-            throw $e;
+            
+            $this->redirect(PendaftaranResource::getUrl('edit-prestasi', ['record' => $this->record]));
         }
+            
+    } catch (\Exception $e) {
+        Log::error('❌ Error saving nilai raport: ' . $e->getMessage());
+        
+        Notification::make()
+            ->title('❌ Gagal Menyimpan Data')
+            ->danger()
+            ->body('Terjadi kesalahan: ' . $e->getMessage())
+            ->send();
+            
+        throw $e;
     }
+}
 
     protected function getHeaderActions(): array
     {

@@ -332,143 +332,197 @@ class EditPrestasiOrganisasi extends EditRecord
         return [];
     }
 
-    protected function afterSave(): void
-    {
-        $data = $this->form->getState();
-        
-        Log::info('💾 Saving Prestasi & Organisasi', [
-            'pendaftaran_id' => $this->record->id,
-            'has_prestasi' => isset($data['prestasi']) && count($data['prestasi']) > 0,
-            'has_organisasi' => !empty($data['nama_organisasi']),
-        ]);
+protected function afterSave(): void
+{
+    $data = $this->form->getState();
+    
+    Log::info('💾 Saving Prestasi & Organisasi', [
+        'pendaftaran_id' => $this->record->id,
+        'is_revision_mode' => $this->needsRevision(),
+        'has_prestasi' => isset($data['prestasi']) && count($data['prestasi']) > 0,
+        'has_organisasi' => !empty($data['nama_organisasi']),
+    ]);
 
-        try {
-            DB::transaction(function () use ($data) {
-                // Save Organisasi
-                $organisasiData = [
-                    'nama_organisasi' => $data['nama_organisasi'] ?? null,
-                    'jabatan' => $data['jabatan'] ?? null,
-                    'file_bukti_organisasi' => is_array($data['file_bukti_organisasi'] ?? null) 
-                        ? ($data['file_bukti_organisasi'][0] ?? null)
-                        : ($data['file_bukti_organisasi'] ?? null),
-                ];
-                
-                $organisasiData = array_filter($organisasiData, fn($v) => $v !== null && $v !== '');
-                
-                if (!empty($organisasiData)) {
-                    $this->record->organisasi()->updateOrCreate(
-                        ['pendaftaran_id' => $this->record->id],
-                        $organisasiData
-                    );
-                }
-                
-                // Save Dokumen Pendukung
-                $dokumenData = [
-                    'file_transkrip_prestasi' => is_array($data['file_transkrip_prestasi'] ?? null)
-                        ? ($data['file_transkrip_prestasi'][0] ?? null)
-                        : ($data['file_transkrip_prestasi'] ?? null),
-                ];
-                
-                $dokumenData = array_filter($dokumenData, fn($v) => $v !== null && $v !== '');
-                
-                if (!empty($dokumenData)) {
-                    $this->record->dokumenPendukung()->updateOrCreate(
-                        ['pendaftaran_id' => $this->record->id],
-                        $dokumenData
-                    );
-                }
+    try {
+        DB::transaction(function () use ($data) {
+            // 1. Save Organisasi
+            $organisasiData = [
+                'nama_organisasi' => $data['nama_organisasi'] ?? null,
+                'jabatan' => $data['jabatan'] ?? null,
+                'file_bukti_organisasi' => is_array($data['file_bukti_organisasi'] ?? null) 
+                    ? ($data['file_bukti_organisasi'][0] ?? null)
+                    : ($data['file_bukti_organisasi'] ?? null),
+            ];
+            
+            $organisasiData = array_filter($organisasiData, fn($v) => $v !== null && $v !== '');
+            
+            if (!empty($organisasiData)) {
+                $this->record->organisasi()->updateOrCreate(
+                    ['pendaftaran_id' => $this->record->id],
+                    $organisasiData
+                );
+            }
+            
+            // 2. Save Dokumen Pendukung
+            $dokumenData = [
+                'file_transkrip_prestasi' => is_array($data['file_transkrip_prestasi'] ?? null)
+                    ? ($data['file_transkrip_prestasi'][0] ?? null)
+                    : ($data['file_transkrip_prestasi'] ?? null),
+            ];
+            
+            $dokumenData = array_filter($dokumenData, fn($v) => $v !== null && $v !== '');
+            
+            if (!empty($dokumenData)) {
+                $this->record->dokumenPendukung()->updateOrCreate(
+                    ['pendaftaran_id' => $this->record->id],
+                    $dokumenData
+                );
+            }
 
-                // Tandai prestasi & organisasi sudah disimpan
-                $this->record->update(['prestasi_organisasi_completed' => true]);
+            // ✅ TANDAI PRESTASI & ORGANISASI SUDAH DISIMPAN
+            $this->record->update(['prestasi_organisasi_completed' => true]);
 
-                // Reset verification status jika perlu revisi
-                if ($this->needsRevision()) {
-                    $verifikasi = $this->record->latestVerifikasi;
-                    if ($verifikasi) {
-                        $verifikasi->update([
-                            'prestasi_organisasi_ok' => true,
+            $this->record->refresh();
+
+            // 3. ✅ HANDLE VERIFIKASI BERDASARKAN MODE
+            if ($this->needsRevision()) {
+                // === MODE REVISION ===
+                $verifikasi = $this->record->latestVerifikasi;
+                
+                if ($verifikasi) {
+                    $verifikasi->update([
+                        'prestasi_organisasi_ok' => true,
+                    ]);
+
+                    Log::info('✅ Revision: Set prestasi_organisasi_ok = true', [
+                        'verifikasi_id' => $verifikasi->id,
+                    ]);
+
+                    // Cek apakah semua bagian sudah diperbaiki
+                    $verifikasi->refresh();
+                    $allFixed = $verifikasi->data_pribadi_ok &&
+                               $verifikasi->data_orang_tua_ok &&
+                               $verifikasi->sekolah_asal_ok &&
+                               $verifikasi->nilai_raport_ok &&
+                               $verifikasi->prestasi_organisasi_ok;
+
+                    if ($allFixed) {
+                        $this->record->update([
+                            'status' => 'submitted',
+                            'submitted_at' => now(),
                         ]);
-
-                        $allFixed = $verifikasi->fresh()->data_pribadi_ok &&
-                                   $verifikasi->fresh()->data_orang_tua_ok &&
-                                   $verifikasi->fresh()->sekolah_asal_ok &&
-                                   $verifikasi->fresh()->nilai_raport_ok &&
-                                   $verifikasi->fresh()->prestasi_organisasi_ok;
-
-                        if ($allFixed) {
-                            $this->record->update([
-                                'status' => 'submitted',
-                                'submitted_at' => now(),
-                            ]);
-                        }
+                        
+                        Log::info('✅ All sections fixed, status changed to submitted');
                     }
                 }
-            });
-
-            // Redirect berdasarkan kondisi
-            if ($this->needsRevision()) {
-                $verifikasi = $this->record->fresh()->latestVerifikasi;
-                $allFixed = $verifikasi &&
-                           $verifikasi->data_pribadi_ok &&
-                           $verifikasi->data_orang_tua_ok &&
-                           $verifikasi->sekolah_asal_ok &&
-                           $verifikasi->nilai_raport_ok &&
-                           $verifikasi->prestasi_organisasi_ok;
-
-                if ($allFixed) {
-                    Notification::make()
-                        ->title('✅ Semua Perbaikan Selesai!')
-                        ->success()
-                        ->body('Semua bagian sudah diperbaiki. Pendaftaran telah dikirim untuk verifikasi ulang.')
-                        ->persistent()
-                        ->send();
-                    
-                    $this->redirect(PendaftaranResource::getUrl('index'));
-                } else {
-                    Notification::make()
-                        ->title('✅ Prestasi & Organisasi Berhasil Diperbaiki!')
-                        ->success()
-                        ->body('Silakan lanjutkan memperbaiki bagian lainnya jika ada.')
-                        ->send();
-                    
-                    $this->redirect(PendaftaranResource::getUrl('index'));
-                }
             } else {
-                $freshRecord = $this->record->fresh();
+                // === MODE DRAFT/NORMAL ===
+                $isComplete = $this->record->isPrestasiOrganisasiComplete(); // Akan return true karena flag sudah di-set
+                $verifikasi = $this->record->latestVerifikasi;
                 
-                if ($freshRecord->canSubmit()) {
-                    Notification::make()
-                        ->title('🎉 Semua Data Lengkap!')
-                        ->success()
-                        ->body('Data berhasil disimpan. Anda sekarang dapat menyelesaikan pendaftaran.')
-                        ->duration(3000)
-                        ->send();
+                if ($verifikasi) {
+                    $verifikasi->update([
+                        'prestasi_organisasi_ok' => $isComplete,
+                    ]);
                     
-                    $this->redirect(PendaftaranResource::getUrl('submit', ['record' => $this->record]));
+                    Log::info('✅ Draft: Updated existing verifikasi', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'prestasi_organisasi_ok' => $isComplete,
+                    ]);
                 } else {
-                    Notification::make()
-                        ->title('✅ Prestasi & Organisasi Tersimpan!')
-                        ->success()
-                        ->body('Data berhasil disimpan. Silakan lengkapi data yang masih kosong.')
-                        ->duration(3000)
-                        ->send();
+                    $verifikasi = $this->record->verifikasi()->create([
+                        'verifikator_id' => null,
+                        'status' => 'pending',
+                        'data_pribadi_ok' => $this->record->isDataPribadiComplete(),
+                        'data_orang_tua_ok' => $this->record->isDataOrangTuaComplete(),
+                        'sekolah_asal_ok' => $this->record->isDataSekolahAsalComplete(),
+                        'nilai_raport_ok' => $this->record->isNilaiRaportComplete(),
+                        'prestasi_organisasi_ok' => $isComplete,
+                    ]);
                     
-                    $this->redirect(PendaftaranResource::getUrl('index'));
+                    Log::info('✅ Draft: Created new verifikasi record', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'prestasi_organisasi_ok' => $isComplete,
+                    ]);
                 }
             }
+        });
+
+        // 4. ✅ REDIRECT BERDASARKAN MODE
+        if ($this->needsRevision()) {
+            $verifikasi = $this->record->fresh()->latestVerifikasi;
+            $allFixed = $verifikasi &&
+                       $verifikasi->data_pribadi_ok &&
+                       $verifikasi->data_orang_tua_ok &&
+                       $verifikasi->sekolah_asal_ok &&
+                       $verifikasi->nilai_raport_ok &&
+                       $verifikasi->prestasi_organisasi_ok;
+
+            if ($allFixed) {
+                Notification::make()
+                    ->title('✅ Semua Perbaikan Selesai!')
+                    ->success()
+                    ->body('Semua bagian sudah diperbaiki. Pendaftaran telah dikirim untuk verifikasi ulang.')
+                    ->persistent()
+                    ->send();
                 
-        } catch (\Exception $e) {
-            Log::error('❌ Error saving prestasi & organisasi: ' . $e->getMessage());
+                $this->redirect(PendaftaranResource::getUrl('index'));
+            } else {
+                Notification::make()
+                    ->title('✅ Prestasi & Organisasi Berhasil Diperbaiki!')
+                    ->success()
+                    ->body('Silakan lanjutkan memperbaiki bagian lainnya jika ada.')
+                    ->send();
+                
+                $this->redirect(PendaftaranResource::getUrl('index'));
+            }
+        } else {
+            // MODE DRAFT/NORMAL
+            $freshRecord = $this->record->fresh();
             
-            Notification::make()
-                ->title('❌ Gagal Menyimpan Data')
-                ->danger()
-                ->body('Terjadi kesalahan: ' . $e->getMessage())
-                ->send();
+            // ✅ GUNAKAN canSubmit() YANG SUDAH BENAR
+            if ($freshRecord->canSubmit()) {
+                Notification::make()
+                    ->title('🎉 Semua Data Lengkap!')
+                    ->success()
+                    ->body('Data berhasil disimpan. Anda sekarang dapat menyelesaikan pendaftaran.')
+                    ->duration(3000)
+                    ->send();
                 
-            throw $e;
+                $this->redirect(PendaftaranResource::getUrl('submit', ['record' => $this->record]));
+            } else {
+                // ✅ TAMPILKAN PESAN YANG LEBIH INFORMATIF
+                $completionStatus = $freshRecord->getCompletionStatus();
+                $incompleteSections = array_filter($completionStatus, fn($status) => !$status);
+                
+                $message = 'Data berhasil disimpan. ';
+                if (count($incompleteSections) > 0) {
+                    $message .= 'Silakan lengkapi data: ' . implode(', ', array_keys($incompleteSections));
+                }
+                
+                Notification::make()
+                    ->title('✅ Prestasi & Organisasi Tersimpan!')
+                    ->success()
+                    ->body($message)
+                    ->duration(4000)
+                    ->send();
+                
+                $this->redirect(PendaftaranResource::getUrl('index'));
+            }
         }
+            
+    } catch (\Exception $e) {
+        Log::error('❌ Error saving prestasi & organisasi: ' . $e->getMessage());
+        
+        Notification::make()
+            ->title('❌ Gagal Menyimpan Data')
+            ->danger()
+            ->body('Terjadi kesalahan: ' . $e->getMessage())
+            ->send();
+            
+        throw $e;
     }
+}
 
     protected function getHeaderActions(): array
     {

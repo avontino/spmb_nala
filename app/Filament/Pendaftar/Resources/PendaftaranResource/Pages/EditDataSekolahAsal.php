@@ -244,12 +244,14 @@ protected function afterSave(): void
     
     Log::info('💾 Saving Data Sekolah Asal', [
         'pendaftaran_id' => $this->record->id,
+        'is_revision_mode' => $this->needsRevision(),
         'fields' => count($data),
         'has_file' => isset($data['file_transkrip_nilai'])
     ]);
 
     try {
         DB::transaction(function () use ($data) {
+            // 1. Save data sekolah asal
             $cleanData = $this->cleanDataForSave($data);
             
             $this->record->dataSekolahAsal()->updateOrCreate(
@@ -257,32 +259,81 @@ protected function afterSave(): void
                 $cleanData
             );
 
-            // Reset verification status saat user edit data yang perlu revisi
+            $this->record->refresh();
+
+            // 2. ✅ HANDLE VERIFIKASI BERDASARKAN MODE
             if ($this->needsRevision()) {
+                // === MODE REVISION ===
+                // User sedang memperbaiki data yang diminta verifikator
                 $verifikasi = $this->record->latestVerifikasi;
+                
                 if ($verifikasi) {
+                    // Paksa set TRUE karena user sudah perbaiki
                     $verifikasi->update([
                         'sekolah_asal_ok' => true,
                     ]);
 
-                    $allFixed = $verifikasi->fresh()->data_pribadi_ok &&
-                               $verifikasi->fresh()->data_orang_tua_ok &&
-                               $verifikasi->fresh()->sekolah_asal_ok &&
-                               $verifikasi->fresh()->nilai_raport_ok &&
-                               $verifikasi->fresh()->prestasi_organisasi_ok;
+                    Log::info('✅ Revision: Set sekolah_asal_ok = true', [
+                        'verifikasi_id' => $verifikasi->id,
+                    ]);
+
+                    // Cek apakah semua bagian sudah diperbaiki
+                    $verifikasi->refresh();
+                    $allFixed = $verifikasi->data_pribadi_ok &&
+                               $verifikasi->data_orang_tua_ok &&
+                               $verifikasi->sekolah_asal_ok &&
+                               $verifikasi->nilai_raport_ok &&
+                               $verifikasi->prestasi_organisasi_ok;
 
                     if ($allFixed) {
+                        // Semua sudah diperbaiki, kembalikan ke submitted untuk reverifikasi
                         $this->record->update([
                             'status' => 'submitted',
                             'submitted_at' => now(),
                         ]);
+                        
+                        Log::info('✅ All sections fixed, status changed to submitted');
                     }
+                }
+            } else {
+                // === MODE DRAFT/NORMAL ===
+                // User sedang mengisi data biasa (belum submit atau belum ada revisi)
+                $isComplete = $this->record->isDataSekolahAsalComplete();
+                $verifikasi = $this->record->latestVerifikasi;
+                
+                if ($verifikasi) {
+                    // UPDATE existing verifikasi dengan hasil completeness check
+                    $verifikasi->update([
+                        'sekolah_asal_ok' => $isComplete,
+                    ]);
+                    
+                    Log::info('✅ Draft: Updated existing verifikasi', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'sekolah_asal_ok' => $isComplete,
+                    ]);
+                } else {
+                    // CREATE new verifikasi HANYA SEKALI (saat pertama kali save)
+                    $verifikasi = $this->record->verifikasi()->create([
+                        'verifikator_id' => null,
+                        'status' => 'pending',
+                        'data_pribadi_ok' => false,
+                        'data_orang_tua_ok' => false,
+                        'sekolah_asal_ok' => $isComplete,
+                        'nilai_raport_ok' => false,
+                        'prestasi_organisasi_ok' => false,
+                    ]);
+                    
+                    Log::info('✅ Draft: Created new verifikasi record', [
+                        'verifikasi_id' => $verifikasi->id,
+                        'sekolah_asal_ok' => $isComplete,
+                    ]);
                 }
             }
         });
 
-        // ✅ NOTIFIKASI DAN REDIRECT BERDASARKAN KONDISI
+        // 3. ✅ REDIRECT BERDASARKAN MODE
         if ($this->needsRevision()) {
+            // MODE REVISION
             $verifikasi = $this->record->fresh()->latestVerifikasi;
             $allFixed = $verifikasi &&
                        $verifikasi->data_pribadi_ok &&
@@ -310,11 +361,11 @@ protected function afterSave(): void
                 $this->redirect(PendaftaranResource::getUrl('index'));
             }
         } else {
-            // Mode normal (draft) - redirect ke halaman berikutnya
+            // MODE DRAFT/NORMAL
             Notification::make()
                 ->title('✅ Data Sekolah Asal Tersimpan!')
                 ->success()
-                ->body('Data berhasil disimpan. Melanjutkan ke Nilai Raport...')
+                ->body('Melanjutkan ke Nilai Raport...')
                 ->duration(2000)
                 ->send();
             

@@ -5,6 +5,8 @@ namespace App\Filament\Verifikator\Resources\VerifikasiResource\Pages;
 use App\Filament\Verifikator\Resources\VerifikasiResource;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Actions;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PendaftaranExport;
 
 class ListVerifikasi extends ListRecords
 {
@@ -19,6 +21,13 @@ class ListVerifikasi extends ListRecords
                 ->label('Refresh')
                 ->icon('heroicon-o-arrow-path')
                 ->action(fn () => $this->redirect($this->getResource()::getUrl('index'))),
+            // add export action
+            Actions\Action::make('export')
+                ->label('Export')
+                ->action(function () {
+                    return Excel::download(new PendaftaranExport, 'pendaftaran.xlsx');
+                })
+                ->icon('heroicon-o-document-arrow-down'),
         ];
     }
 }

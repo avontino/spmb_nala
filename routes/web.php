@@ -5,6 +5,19 @@
 use App\Http\Controllers\CetakBuktiController;
 use Illuminate\Support\Facades\Route;
 
+// Route for downloading exports
+Route::middleware(['auth'])->group(function () {
+    Route::get('/exports/download/{file}', function ($file) {
+        $filePath = storage_path('app/public/exports/' . $file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($filePath)->deleteFileAfterSend(true);
+    })->name('exports.download');
+});
+
 // Route for printing pendaftaran proof
 Route::middleware(['auth'])->group(function () {
     Route::get('/cetak-pendaftaran/{record}', function ($record) {

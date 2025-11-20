@@ -8,9 +8,28 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Cell\StringValueBinder;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, ShouldQueue
+class PendaftaranExport extends StringValueBinder implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, ShouldQueue, WithCustomValueBinder, WithChunkReading
 {
+    /**
+     * Number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 600;
+
     /**
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -19,11 +38,14 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
         return Pendaftaran::query()
             ->with([
                 'user',
+                'latestVerifikasi',
                 'dataPribadi',
                 'dataOrangTua',
                 'dataSekolahAsal',
                 'nilaiRaport',
-                'prestasi'
+                'prestasi',
+                'organisasi',
+                'dokumenPendukung',
             ]);
     }
 
@@ -37,6 +59,8 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             'NISN',
             'Email',
             'Tanggal Submit',
+            'Status Pendaftaran',
+            'Status Verifikasi',
             // data pribadi
             'Nama Lengkap',
             'Tempat Lahir',
@@ -101,8 +125,6 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             'Nilai rata-rata semester 2',
             'Nilai rata-rata semester 3',
             'Nilai rata-rata semester 4',
-            'Nilai rata-rata semester 5',
-            'Nilai rata-rata semester 6',
             // data prestasi
             'Nama Prestasi 1',
             'Tingkat Prestasi 1',
@@ -110,6 +132,14 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             'Nama Prestasi 2',
             'Tingkat Prestasi 2',
             'File Bukti Prestasi 2 (ada/tidak)',
+            'Nama Prestasi 3',
+            'Tingkat Prestasi 3',
+            'File Bukti Prestasi 3 (ada/tidak)',
+            // data organisasi
+            'Nama Organisasi',
+            'Jabatan Organisasi',
+            'File Bukti Organisasi (ada/tidak)',
+            'File Transkrip Prestasi (ada/tidak)',
         ];
     }
 
@@ -121,11 +151,13 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
         return [
             $pendaftaran->nomor_pendaftaran,
             $pendaftaran->user->name,
-            $pendaftaran->user->nik,
-            $pendaftaran->user->nokk,
-            $pendaftaran->user->nisn,
+            (string) $pendaftaran->user->nik,
+            (string) $pendaftaran->user->nokk,
+            (string) $pendaftaran->user->nisn,
             $pendaftaran->user->email,
             $pendaftaran->submitted_at ?? '-',
+            ucwords(str_replace('_', ' ', $pendaftaran->status)),
+            $pendaftaran->latestVerifikasi ? ucwords(str_replace('_', ' ', $pendaftaran->latestVerifikasi->status)) : 'Belum Diverifikasi',
             // data pribadi
             $pendaftaran->dataPribadi->nama_lengkap ?? '-',
             $pendaftaran->dataPribadi->tempat_lahir ?? '-',
@@ -151,7 +183,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             // data orang tua
             $pendaftaran->dataOrangTua->nama_ayah ?? '-',
             $pendaftaran->dataOrangTua->pekerjaan_ayah ?? '-',
-            $pendaftaran->dataOrangTua->nik_ayah ?? '-',
+            (string) ($pendaftaran->dataOrangTua->nik_ayah ?? '-'),
             $pendaftaran->dataOrangTua->status_ayah ?? '-',
             $pendaftaran->dataOrangTua->pendidikan_ayah ?? '-',
             $pendaftaran->dataOrangTua->pekerjaan_ayah ?? '-',
@@ -159,7 +191,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $pendaftaran->dataOrangTua->penghasilan_ayah ?? '-',
             $pendaftaran->dataOrangTua->nama_ibu ?? '-',
             $pendaftaran->dataOrangTua->pekerjaan_ibu ?? '-',
-            $pendaftaran->dataOrangTua->nik_ibu ?? '-',
+            (string) ($pendaftaran->dataOrangTua->nik_ibu ?? '-'),
             $pendaftaran->dataOrangTua->status_ibu ?? '-',
             $pendaftaran->dataOrangTua->pendidikan_ibu ?? '-',
             $pendaftaran->dataOrangTua->pekerjaan_ibu ?? '-',
@@ -180,7 +212,7 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $pendaftaran->dataSekolahAsal->jenjang_sekolah ?? '-',
             $pendaftaran->dataSekolahAsal->nama_sekolah ?? '-',
             $pendaftaran->dataSekolahAsal->status_sekolah ?? '-',
-            $pendaftaran->dataSekolahAsal->npsn ?? '-',
+            (string) ($pendaftaran->dataSekolahAsal->npsn ?? '-'),
             $pendaftaran->dataSekolahAsal->alamat_sekolah ?? '-',
             $pendaftaran->dataSekolahAsal->kota_sekolah ?? '-',
             $pendaftaran->dataSekolahAsal->provinsi_sekolah ?? '-',
@@ -190,8 +222,6 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $pendaftaran->nilaiRaport->where('semester', 2)->first()->rata_rata ?? null,
             $pendaftaran->nilaiRaport->where('semester', 3)->first()->rata_rata ?? null,
             $pendaftaran->nilaiRaport->where('semester', 4)->first()->rata_rata ?? null,
-            $pendaftaran->nilaiRaport->where('semester', 5)->first()->rata_rata ?? null,
-            $pendaftaran->nilaiRaport->where('semester', 6)->first()->rata_rata ?? null,
             // data prestasi
             $pendaftaran->prestasi->count() >= 1 ? $pendaftaran->prestasi->get(0)->nama_prestasi : null,
             $pendaftaran->prestasi->count() >= 1 ? $pendaftaran->prestasi->get(0)->tingkat_prestasi : null,
@@ -199,9 +229,26 @@ class PendaftaranExport implements FromQuery, WithHeadings, WithMapping, ShouldA
             $pendaftaran->prestasi->count() >= 2 ? $pendaftaran->prestasi->get(1)->nama_prestasi : null,
             $pendaftaran->prestasi->count() >= 2 ? $pendaftaran->prestasi->get(1)->tingkat_prestasi : null,
             $pendaftaran->prestasi->count() >= 2 ? ($pendaftaran->prestasi->get(1)->file_bukti_prestasi ? 'ada' : 'tidak') : null,
+            $pendaftaran->prestasi->count() >= 3 ? $pendaftaran->prestasi->get(2)->nama_prestasi : null,
+            $pendaftaran->prestasi->count() >= 3 ? $pendaftaran->prestasi->get(2)->tingkat_prestasi : null,
+            $pendaftaran->prestasi->count() >= 3 ? ($pendaftaran->prestasi->get(2)->file_bukti_prestasi ? 'ada' : 'tidak') : null,
+            // data organisasi
+            $pendaftaran->organisasi ? $pendaftaran->organisasi->nama_organisasi : null,
+            $pendaftaran->organisasi ? $pendaftaran->organisasi->jabatan : null,
+            $pendaftaran->organisasi ? ($pendaftaran->organisasi->file_bukti_organisasi ? 'ada' : 'tidak') : null,
+            // dokumen pendukung
+            $pendaftaran->dokumenPendukung ? ($pendaftaran->dokumenPendukung->file_transkrip_prestasi ? 'ada' : 'tidak') : null,
         ];
     }
 
-
+    /**
+     * Define the chunk size for reading data
+     *
+     * @return int
+     */
+    public function chunkSize(): int
+    {
+        return 500;
+    }
 
 }

@@ -139,7 +139,7 @@ class PendaftaranResource extends Resource
                     ->label('Lihat Detail')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn (Pendaftaran $record) => static::getUrl('view', ['record' => $record]))
+                    ->url(fn (Pendaftaran $record) => static::getUrl('verifikasi', ['record' => $record]))
                     ->visible(fn (Pendaftaran $record) => in_array($record->status, ['approved', 'rejected'])),
                 // Create custom delete action
                 Tables\Actions\Action::make('delete')

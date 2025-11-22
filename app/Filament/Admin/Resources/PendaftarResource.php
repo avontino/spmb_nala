@@ -35,11 +35,11 @@ class PendaftarResource extends Resource
                 Forms\Components\TextInput::make('nik')
                     ->required()
                     ->maxLength(16)
-                    ->unique(),                    
+                    ->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('nisn')
                     ->required()
                     ->maxLength(10)
-                    ->unique(),    
+                    ->unique(ignoreRecord: true),    
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -47,10 +47,12 @@ class PendaftarResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255)
-                    ->unique(),
+                    ->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->dehydrated(fn (?string $state): bool => filled($state))
+                    ->default('')
                     ->maxLength(255),
                 Forms\Components\Hidden::make('role')
                     ->default('pendaftar')

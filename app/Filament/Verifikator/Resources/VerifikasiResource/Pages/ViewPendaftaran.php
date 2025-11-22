@@ -9,9 +9,12 @@ use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\ViewEntry;
+
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Forms\Components\ViewField;
 
 class ViewPendaftaran extends ViewRecord
 {
@@ -31,7 +34,8 @@ class ViewPendaftaran extends ViewRecord
             'nilaiRaport',
             'prestasi',
             'organisasi',
-            'latestVerifikasi.verifikator'
+            'latestVerifikasi.verifikator',
+            'dokumenPendukung',
         ]);
     }
 
@@ -119,7 +123,6 @@ class ViewPendaftaran extends ViewRecord
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-
                 Section::make('Data Orang Tua')
                     ->schema([
                         Grid::make(2)
@@ -135,7 +138,38 @@ class ViewPendaftaran extends ViewRecord
                                 TextEntry::make('dataOrangTua.no_hp_ortu')
                                     ->label('No. HP Orang Tua')
                                     ->columnSpanFull(),
+                                // file viewer for kk/ktp
+                                
                             ]),
+                        Grid::make(3)->schema([
+                            ViewEntry::make('dataOrangTua.file_kk_ktp')
+                                    ->label('Preview')
+                                    ->visible(fn () => $this->record->dataOrangTua->file_kk_ktp !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->dataOrangTua?->file_kk_ktp,
+                                        'label' => 'KK / KTP',
+                                        'url'  => null,
+                                    ]),
+                            // preview for file_slip_gaji
+                            ViewEntry::make('dataOrangTua.file_slip_gaji')
+                                    ->label('Preview')
+                                    ->visible(fn () => $this->record->dataOrangTua->file_slip_gaji !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->dataOrangTua?->file_slip_gaji,
+                                        'label' => 'Slip Gaji',
+                                        'url'  => null,
+                                    ]),
+                            // preview for file_ktp_wali
+                            ViewEntry::make('dataOrangTua.file_ktp_wali')
+                                    ->label('Preview')
+                                    ->visible(fn () => $this->record->dataOrangTua->file_ktp_wali !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->dataOrangTua?->file_ktp_wali,
+                                        'label' => 'KTP Wali',
+                                        'url'  => null,
+                                    ]),
+                            
+                        ])
                     ])
                     ->collapsible(),
 
@@ -152,6 +186,16 @@ class ViewPendaftaran extends ViewRecord
                                 TextEntry::make('dataSekolahAsal.alamat_sekolah')
                                     ->label('Alamat Sekolah')
                                     ->columnSpanFull(),
+                                // file preview for file_transkrip_nilai
+                                ViewEntry::make('dataSekolahAsal.file_transkrip_nilai')
+                                    ->columnSpanFull()
+                                    ->label('Preview Transkrip Nilai')
+                                    ->visible(fn () => $this->record->dataSekolahAsal->file_transkrip_nilai !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->dataSekolahAsal?->file_transkrip_nilai,
+                                        'label' => 'Transkrip Nilai',
+                                        'url'  => null,
+                                    ])
                             ]),
                     ])
                     ->collapsible(),
@@ -193,8 +237,20 @@ class ViewPendaftaran extends ViewRecord
                                 TextEntry::make('tingkat_prestasi')
                                     ->label('Tingkat')
                                     ->badge(),
+                                // file preview for file_bukti_prestasi
+                                ViewEntry::make('file_bukti_prestasi')
+                                    ->label('Preview Bukti Prestasi')
+                                    ->visible(function ($state) {
+                                        return $state !== null;
+                                    })
+                                    ->viewData(fn ($state) => [
+                                        'file' => $state,
+                                        'label' => 'Bukti Prestasi',
+                                        'url'  => null,
+                                    ])
+                                    ->view('filament.components.file-viewer'),
                             ])
-                            ->columns(2)
+                            ->columns(3)
                             ->columnSpanFull(),
                     ])
                     ->collapsible()
@@ -208,10 +264,39 @@ class ViewPendaftaran extends ViewRecord
                                     ->label('Nama Organisasi'),
                                 TextEntry::make('organisasi.jabatan')
                                     ->label('Jabatan'),
+                                ViewEntry::make('organisasi.file_bukti_organisasi')
+                                    ->label('Preview Bukti Organisasi')
+                                    ->visible(fn () => $this->record->organisasi && $this->record->organisasi->file_bukti_organisasi !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->organisasi?->file_bukti_organisasi,
+                                        'label' => 'Bukti Organisasi',
+                                        'url'  => null,
+                                    ])
                             ]),
                     ])
                     ->collapsible()
                     ->visible(fn () => $this->record->organisasi !== null),
+                
+                // data pendukung contain file preview file_transkrip_nilai
+                Section::make('Data Pendukung')
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                ViewEntry::make('dokumenPendukung.file_transkrip_prestasi')
+                                    ->label('Preview Transkrip Nilai')
+                                    ->visible(fn () => $this->record->dokumenPendukung && $this->record->dokumenPendukung->file_transkrip_prestasi !== null)
+                                    ->view('filament.components.file-viewer', [
+                                        'file' => $this->record->dokumenPendukung?->file_transkrip_prestasi ,
+                                        'label' => 'Transkrip Prestasi',
+                                        'url'  => null,
+                                    ]),
+                            ]),
+                    ])
+                    ->collapsible()
+                    ->visible(fn () => $this->record->dokumenPendukung !== null),
+
+                
+                    
             ]);
     }
 

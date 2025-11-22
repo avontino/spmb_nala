@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\URL;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -27,13 +28,13 @@ class AppServiceProvider extends ServiceProvider
         // force livewire to add prefix to routes on production
         if (config('app.env') === 'production') {
             Livewire::setUpdateRoute(function ($handle) {
-                return Route::post("2026/livewire/update", $handle)
+                return \Route::post("2026/livewire/update", $handle)
                     ->middleware(['web']); // Ensure the 'web' middleware is applied
             });
 
             // 2. Configure the Livewire JavaScript Asset Route (Also necessary)
             Livewire::setScriptRoute(function ($handle) {
-                return Route::get("2026/livewire/livewire.js", $handle);
+                return \Route::get("2026/livewire/livewire.js", $handle);
             });
         }
     }

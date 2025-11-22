@@ -15,9 +15,10 @@ return new class extends Migration
             $table->string('nama_organisasi')->nullable();
             $table->enum('jabatan', [
                 'Ketua',
-                'Wakil',
+                'Wakil Ketua',
                 'Sekretaris',
-                'Lainnya'
+                'Bendahara',
+                'Koordinator Bidang'
             ])->nullable();
             
             // File Upload

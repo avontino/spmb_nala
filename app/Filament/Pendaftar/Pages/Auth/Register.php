@@ -100,9 +100,7 @@ protected function getNikFormComponent(): Component
             ->label('Nomor KK (Kartu Keluarga)')
             ->required()
             ->numeric()
-            ->unique(User::class, 'nokk')
             ->validationMessages([
-                'unique' => 'Nomor KK sudah terdaftar sebelumnya.',
                 'numeric' => 'Nomor KK hanya boleh berisi angka.',
             ])
             ->helperText('Masukkan Nomor Kartu Keluarga sesuai Kartu Keluarga (KK)');

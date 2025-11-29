@@ -18,18 +18,26 @@ class PendaftaranExport extends StringValueBinder implements FromQuery, WithHead
 {
     /**
      * Number of times the job may be attempted.
+     * Reduced to 1 for production to prevent multiple failed exports with large data
      *
      * @var int
      */
-    public $tries = 3;
+    public $tries = 1;
 
     /**
      * The number of seconds the job can run before timing out.
      *
      * @var int
      */
-    public $timeout = 600;
+    public $timeout = 1800;
 
+    /**
+     * The number of seconds to wait before retrying a job that encountered an exception.
+     *
+     * @var int
+     */
+    public $backoff = 60;
+    
     /**
     * @return \Illuminate\Database\Eloquent\Builder
     */

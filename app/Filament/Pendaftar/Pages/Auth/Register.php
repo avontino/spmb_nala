@@ -41,12 +41,12 @@ class Register extends BaseRegister
             ->required()
             ->minLength(3)
             ->maxLength(255)
-            ->regex('/^[a-zA-Z\s]+$/')
+            ->regex('/^[a-zA-Z\s.\',-]+$/')
             ->validationMessages([
-                'regex' => 'Nama hanya boleh berisi huruf alfabet.',
+                'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
                 'min' => 'Nama minimal 3 huruf.',
             ])
-            ->helperText('Ketik nama lengkap sesuai ijazah (minimal 3 huruf, hanya huruf alfabet)');
+            ->helperText('Ketik nama lengkap sesuai ijazah (minimal 3 huruf). Boleh menggunakan tanda petik untuk nama seperti Sa\'ad');
     }
 
 protected function getNikFormComponent(): Component

@@ -101,6 +101,10 @@ return $form
                             ->label('Nama Ayah')
                             ->required()
                             ->maxLength(255)
+                            ->regex('/^[a-zA-Z\s.\',-]+$/')
+                            ->validationMessages([
+                                'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
+                            ])
                             ->placeholder('Nama lengkap ayah kandung'),
 
                         // ✅ BARU: NIK AYAH
@@ -189,6 +193,10 @@ return $form
                             ->label('Nama Ibu')
                             ->required()
                             ->maxLength(255)
+                            ->regex('/^[a-zA-Z\s.\',-]+$/')
+                            ->validationMessages([
+                                'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
+                            ])
                             ->placeholder('Nama lengkap ibu kandung'),
 
                         // ✅ BARU: NIK IBU
@@ -319,6 +327,10 @@ return $form
                         TextInput::make('nama_wali')
                             ->label('Nama Wali')
                             ->maxLength(255)
+                            ->regex('/^[a-zA-Z\s.\',-]+$/')
+                            ->validationMessages([
+                                'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
+                            ])
                             ->placeholder('Nama lengkap wali'),
 
                         // ✅ BARU: STATUS WALI

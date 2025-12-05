@@ -99,8 +99,12 @@ Section::make('Identitas Diri')
                     ->label('Nama Lengkap Pendaftar')
                     ->required()
                     ->maxLength(255)
+                    ->regex('/^[a-zA-Z\s.\',-]+$/')
+                    ->validationMessages([
+                        'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
+                    ])
                     ->placeholder('Sesuai Ijazah')
-                    ->helperText('Tulis nama lengkap sesuai ijazah'),
+                    ->helperText('Tulis nama lengkap sesuai ijazah. Boleh menggunakan tanda petik untuk nama seperti Sa\'ad'),
 
                 Select::make('jenis_kelamin')
                     ->label('Jenis Kelamin')

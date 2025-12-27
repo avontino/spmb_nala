@@ -8,7 +8,9 @@
         <div class="ml-3">
             <h3 class="text-sm font-medium text-danger-800">Pendaftaran Ditutup</h3>
             <div class="mt-2 text-sm text-danger-700">
-                <p>Maaf, pendaftaran telah ditutup pada tanggal <strong>{{ $closedDate }}</strong>. Anda tidak dapat melakukan pendaftaran baru.</p>
+                <p>Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
+                <br>
+                <p>Panitia SPMB Tahun Pelajaran 2026/2027</p>
             </div>
         </div>
     </div>

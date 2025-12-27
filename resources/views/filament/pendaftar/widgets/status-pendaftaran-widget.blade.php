@@ -42,20 +42,10 @@
                     <h3 class="text-xl font-bold text-red-900 mb-2">
                         🚫 Pendaftaran Telah Ditutup
                     </h3>
-                    <p class="text-sm text-red-800 mb-3">
-                        Periode pendaftaran telah berakhir pada <span class="font-bold">{{ $this->getClosedDate() }}</span>
-                        @if($this->getDaysSinceClosed() > 0)
-                            <span class="text-xs font-normal">({{ $this->getDaysSinceClosed() }} hari yang lalu)</span>
-                        @endif
-                    </p>
-                    <div class="bg-white/50 rounded-lg p-3 border border-red-200">
-                        <p class="text-sm text-red-700">
-                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                            </svg>
-                            Anda masih dapat melihat status pendaftaran dan mengunduh bukti pendaftaran jika sudah disetujui.
-                        </p>
-                    </div>
+                    <p class="text-sm text-red-800">Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
+                    <br>
+                    <p class="text-sm text-red-800">Panitia SPMB Tahun Pelajaran 2026/2027</p>
+                    
                 </div>
             </div>
         </div>

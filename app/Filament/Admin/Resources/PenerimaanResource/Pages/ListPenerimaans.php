@@ -56,16 +56,21 @@ class ListPenerimaans extends ListRecords
                     try {
                         $file = $data['file'];
 
+                        $import = new PenerimaanImport;
+
                         if ($file instanceof \Illuminate\Http\UploadedFile) {
-                            Excel::import(new PenerimaanImport, $file);
+                            $extension = strtolower($file->getClientOriginalExtension());
+                            $readerType = $extension === 'xlsx' ? \Maatwebsite\Excel\Excel::XLSX : \Maatwebsite\Excel\Excel::XLS;
+                            Excel::import($import, $file->getRealPath(), null, $readerType);
                         } else {
                             $filePath = Storage::disk('local')->path($file);
-                            Excel::import(new PenerimaanImport, $filePath);
+                            Excel::import($import, $filePath);
                             Storage::disk('local')->delete($file);
                         }
 
                         Notification::make()
-                            ->title('Berhasil import data penerimaan')
+                            ->title('Import selesai')
+                            ->body("Berhasil diinsert: {$import->inserted}, Gagal: {$import->failed}")
                             ->success()
                             ->send();
 

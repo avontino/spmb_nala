@@ -31,24 +31,29 @@ class PenerimaanResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nomor_pendaftaran')
-                    ->label('Nomor Pendaftaran')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\Select::make('pendaftaran_id')
                     ->label('Pendaftaran')
-                    ->relationship('pendaftaran', 'nomor_pendaftaran')
+                    ->relationship('pendaftaran', 'nomor_pendaftaran', fn ($query) => $query->where('status', 'approved'))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->unique(table: 'penerimaan', column: 'pendaftaran_id', ignoreRecord: true)
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('nomor_pendaftaran', \App\Models\Pendaftaran::find($state)?->nomor_pendaftaran)),
+                Forms\Components\Hidden::make('nomor_pendaftaran')
+                    ->label('Nomor Pendaftaran'),
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
-                        'diterima' => 'Diterima',
-                        'tidak_diterima' => 'Tidak Diterima',
-                        'cadangan' => 'Cadangan',
+                        'lolos' => 'Lolos',
+                        'tidak_lolos' => 'Tidak Lolos',
                     ])
                     ->required()
-                    ->default('diterima'),
+                    ->default('lolos'),
+                Forms\Components\TextInput::make('nomor_va')
+                    ->label('Nomor VA')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('sesi')
+                    ->label('Sesi')
+                    ->maxLength(255)
             ]);
     }
 
@@ -72,16 +77,22 @@ class PenerimaanResource extends Resource
                 Tables\Columns\BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
-                        'success' => 'diterima',
-                        'danger' => 'tidak_diterima',
-                        'warning' => 'cadangan',
+                        'success' => 'lolos',
+                        'danger' => 'tidak_lolos',
                     ])
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'diterima' => 'Diterima',
-                        'tidak_diterima' => 'Tidak Diterima',
-                        'cadangan' => 'Cadangan',
+                        'lolos' => 'Lolos',
+                        'tidak_lolos' => 'Tidak Lolos',
                         default => $state,
                     }),
+                Tables\Columns\TextColumn::make('nomor_va')
+                    ->label('Nomor VA')
+                    ->searchable()
+                    ->placeholder('-'),
+                Tables\Columns\TextColumn::make('sesi')
+                    ->label('Sesi')
+                    ->searchable()
+                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('lastUpdatedBy.name')
                     ->label('Terakhir Diupdate Oleh')
                     ->placeholder('-'),
@@ -94,9 +105,8 @@ class PenerimaanResource extends Resource
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        'diterima' => 'Diterima',
-                        'tidak_diterima' => 'Tidak Diterima',
-                        'cadangan' => 'Cadangan',
+                        'lolos' => 'Lolos',
+                        'tidak_lolos' => 'Tidak Lolos',
                     ]),
             ])
             ->actions([

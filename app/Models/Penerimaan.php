@@ -13,12 +13,27 @@ class Penerimaan extends Model
         'nomor_pendaftaran',
         'pendaftaran_id',
         'status',
+        'nomor_va',
+        'sesi',
         'last_update_by',
     ];
 
     protected $casts = [
         'status' => 'string',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->last_update_by = auth()->id();
+        });
+
+        static::updating(function ($model) {
+            $model->last_update_by = auth()->id();
+        });
+    }
 
     public function pendaftaran(): BelongsTo
     {

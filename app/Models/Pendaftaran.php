@@ -77,6 +77,11 @@ class Pendaftaran extends Model
         return $this->hasOne(Verifikasi::class)->latestOfMany();
     }
 
+    public function penerimaan(): HasOne
+    {
+        return $this->hasOne(Penerimaan::class);
+    }
+
     // Status Helper Methods
     public function isDraft(): bool
     {

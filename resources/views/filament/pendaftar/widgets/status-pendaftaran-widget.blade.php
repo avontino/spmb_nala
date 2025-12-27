@@ -31,21 +31,23 @@
 
         {{-- Alert Registration Closed --}}
         @if($this->isRegistrationClosed())
-        <div class="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-500 rounded-xl p-6 shadow-lg">
-            <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 p-3 bg-red-500 rounded-xl">
+        <div class="relative overflow-hidden bg-red-400 rounded-2xl p-6 shadow-lg">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mt-20 -mr-20"></div>
+
+            <div class="relative flex items-start gap-4">
+                <div class="flex-shrink-0 p-3 bg-white/20 backdrop-blur-sm rounded-xl">
                     <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                     </svg>
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-red-900 mb-2">
-                        🚫 Pendaftaran Telah Ditutup
+                    <h3 class="text-xl font-bold text-white mb-2">
+                        Pendaftaran Telah Ditutup
                     </h3>
-                    <p class="text-sm text-red-800">Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
+                    <p class="text-sm text-red-50">Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
                     <br>
-                    <p class="text-sm text-red-800">Panitia SPMB Tahun Pelajaran 2026/2027</p>
-                    
+                    <p class="text-sm text-red-50">Panitia SPMB Tahun Pelajaran 2026/2027</p>
+
                 </div>
             </div>
         </div>
@@ -257,7 +259,7 @@
                 </div>
 
                 {{-- Section Status Penerimaan --}}
-                @if(in_array($pendaftaran->status, ['approved', 'rejected']))
+                @if($pendaftaran->penerimaan))
                     <div class="mt-6 pt-6 border-t-2 {{ $pendaftaran->status === 'approved' ? 'border-green-200' : 'border-red-200' }}">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="p-2 {{ $pendaftaran->status === 'approved' ? 'bg-green-100' : 'bg-red-100' }} rounded-lg">

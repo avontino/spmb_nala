@@ -6,21 +6,66 @@ use App\Models\User;
 use App\Models\Pendaftaran;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewComponent;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\Register as BaseRegister;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Notifications\Notification;
+use Carbon\Carbon;
+use Filament\Notifications\Actions\Action;
 
 class Register extends BaseRegister
 {
+    public function mount(): void
+    {
+        parent::mount();
+    }
+
+    protected function isRegistrationClosed(): bool
+    {
+        $closedDate = config('app.register_closed_date');
+
+        if (!$closedDate) {
+            return false;
+        }
+
+        return Carbon::now()->greaterThanOrEqualTo(Carbon::parse($closedDate));
+    }
+
+    protected function getClosedDateFormatted(): string
+    {
+        $closedDate = config('app.register_closed_date');
+
+        if (!$closedDate) {
+            return '';
+        }
+
+        return Carbon::parse($closedDate)->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i');
+    }
+
+    protected function getRegistrationClosedAlert(): Component
+    {
+        if (!$this->isRegistrationClosed()) {
+            return \Filament\Forms\Components\Placeholder::make('hidden')
+                ->visible(false);
+        }
+
+        return \Filament\Forms\Components\Placeholder::make('registration_closed_alert')
+            ->label('')
+            ->content(view('filament.components.registration-closed-alert', [
+                'closedDate' => $this->getClosedDateFormatted(),
+            ]));
+    }
+
     protected function getForms(): array
     {
         return [
             'form' => $this->form(
                 $this->makeForm()
                     ->schema([
+                        $this->getRegistrationClosedAlert(),
                         $this->getNameFormComponent(),
                         $this->getNikFormComponent(),
                         $this->getKKFormComponent(),
@@ -196,6 +241,21 @@ protected function getNisnFormComponent(): Component
 
     protected function handleRegistration(array $data): User
     {
+        // Prevent registration if closed
+        if ($this->isRegistrationClosed()) {
+            Notification::make()
+                ->title('Pendaftaran Ditutup')
+                ->danger()
+                ->body('Maaf, pendaftaran telah ditutup pada tanggal ' . $this->getClosedDateFormatted() . '. Anda tidak dapat melakukan pendaftaran baru.')
+                ->persistent()
+                ->send();
+
+            // Stop execution by throwing validation exception
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => 'Pendaftaran telah ditutup pada tanggal ' . $this->getClosedDateFormatted() . '.',
+            ]);
+        }
+
         // Create user
         $user = User::create([
             'name' => $data['name'],

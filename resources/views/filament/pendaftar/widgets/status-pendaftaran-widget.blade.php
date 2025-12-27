@@ -29,6 +29,38 @@
             </div>
         </div>
 
+        {{-- Alert Registration Closed --}}
+        @if($this->isRegistrationClosed())
+        <div class="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-500 rounded-xl p-6 shadow-lg">
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 p-3 bg-red-500 rounded-xl">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold text-red-900 mb-2">
+                        🚫 Pendaftaran Telah Ditutup
+                    </h3>
+                    <p class="text-sm text-red-800 mb-3">
+                        Periode pendaftaran telah berakhir pada <span class="font-bold">{{ $this->getClosedDate() }}</span>
+                        @if($this->getDaysSinceClosed() > 0)
+                            <span class="text-xs font-normal">({{ $this->getDaysSinceClosed() }} hari yang lalu)</span>
+                        @endif
+                    </p>
+                    <div class="bg-white/50 rounded-lg p-3 border border-red-200">
+                        <p class="text-sm text-red-700">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                            Anda masih dapat melihat status pendaftaran dan mengunduh bukti pendaftaran jika sudah disetujui.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         {{-- Tombol Join WhatsApp Group --}}
         <div class="relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mt-20 -mr-20"></div>
@@ -80,7 +112,7 @@
 
         @if($pendaftaran)
             {{-- Status Pendaftaran --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700 p-6 shadow">
+            <div id="status-pendaftaran" class="bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700 p-6 shadow scroll-mt-4">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                         <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -224,7 +256,7 @@
                         </a>
                     @endif
 
-                    <a href="{{ \App\Filament\Pendaftar\Resources\PendaftaranResource::getUrl('index') }}" 
+                    <a href="{{ \App\Filament\Pendaftar\Resources\PendaftaranResource::getUrl('index') }}"
                        class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -233,6 +265,127 @@
                         Lihat Detail
                     </a>
                 </div>
+
+                {{-- Section Status Penerimaan --}}
+                @if(in_array($pendaftaran->status, ['approved', 'rejected']))
+                    <div class="mt-6 pt-6 border-t-2 {{ $pendaftaran->status === 'approved' ? 'border-green-200' : 'border-red-200' }}">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 {{ $pendaftaran->status === 'approved' ? 'bg-green-100' : 'bg-red-100' }} rounded-lg">
+                                <svg class="w-6 h-6 {{ $pendaftaran->status === 'approved' ? 'text-green-600' : 'text-red-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    @if($pendaftaran->status === 'approved')
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    @else
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    @endif
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold {{ $pendaftaran->status === 'approved' ? 'text-green-800' : 'text-red-800' }}">
+                                    @if($pendaftaran->status === 'approved')
+                                        🎉 Status Penerimaan: DITERIMA
+                                    @else
+                                        Status Penerimaan: Tidak Diterima
+                                    @endif
+                                </h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    @if($pendaftaran->status === 'approved')
+                                        Selamat! Anda diterima sebagai siswa baru
+                                    @else
+                                        Mohon maaf, pendaftaran Anda tidak dapat diterima
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+
+                        @if($pendaftaran->status === 'approved')
+                            {{-- Info Seleksi Offline untuk yang diterima --}}
+                            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-5 mb-4">
+                                <div class="flex items-start gap-3 mb-4">
+                                    <div class="p-2 bg-green-500 rounded-lg">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-green-900 mb-2">Langkah Selanjutnya: Seleksi Offline</h4>
+                                        <p class="text-sm text-green-800 mb-3">
+                                            Silakan download dokumen panduan dan surat panggilan untuk mengikuti tahap seleksi offline.
+                                        </p>
+                                        <ul class="text-sm text-green-700 space-y-1.5 mb-4">
+                                            <li class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Baca panduan seleksi offline dengan seksama</span>
+                                            </li>
+                                            <li class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Siapkan dokumen yang diperlukan</span>
+                                            </li>
+                                            <li class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span>Datang tepat waktu sesuai jadwal yang ditentukan</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                {{-- Download Buttons --}}
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <a href="#"
+                                       class="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        Download Panduan Seleksi
+                                    </a>
+                                    <a href="#"
+                                       class="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        Download Surat Panggilan
+                                    </a>
+                                </div>
+                            </div>
+
+                            {{-- Informasi Kontak --}}
+                            <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4">
+                                <div class="flex items-center gap-2 text-blue-800">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-sm font-medium">
+                                        Jika ada pertanyaan, hubungi panitia PPDB melalui kontak yang tersedia.
+                                    </span>
+                                </div>
+                            </div>
+                        @else
+                            {{-- Info untuk yang ditolak --}}
+                            <div class="bg-red-50 border-2 border-red-200 rounded-xl p-5">
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-red-900 mb-2">Catatan</h4>
+                                        <p class="text-sm text-red-800">
+                                            @php
+                                                $verifikasi = $pendaftaran->latestVerifikasi;
+                                                $catatan = $verifikasi?->catatan_revisi ?? 'Mohon maaf, pendaftaran Anda belum dapat kami terima pada periode ini. Terima kasih atas partisipasi Anda.';
+                                            @endphp
+                                            {{ $catatan }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @endif
             </div>
 
         @else

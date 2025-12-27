@@ -23,7 +23,7 @@ use Illuminate\Support\HtmlString;
 class EditPrestasiOrganisasi extends EditRecord
 {
     use PreventEditWhenSubmitted;
-    
+
     protected static string $resource = PendaftaranResource::class;
     
     protected string $verificationField = 'prestasi_organisasi_ok';

@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\HtmlString;
+use Carbon\Carbon;
 
 class SubmitPendaftaran extends EditRecord
 {
@@ -26,8 +27,23 @@ class SubmitPendaftaran extends EditRecord
 
     public function mount(int | string $record): void
     {
+        // Cek apakah pendaftaran sudah ditutup
+        $closedDate = config('app.register_closed_date');
+
+        if ($closedDate && Carbon::now()->greaterThanOrEqualTo(Carbon::parse($closedDate))) {
+            Notification::make()
+                ->title('Pendaftaran Telah Ditutup')
+                ->body('Pendaftaran telah ditutup sejak ' . Carbon::parse($closedDate)->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i') . '. Anda hanya dapat mengakses dashboard.')
+                ->danger()
+                ->persistent()
+                ->send();
+
+            $this->redirect(route('filament.pendaftar.pages.dashboard'), navigate: true);
+            return;
+        }
+
         parent::mount($record);
-        
+
         // Redirect jika tidak bisa submit
         if (!$this->record->canSubmit()) {
             Notification::make()
@@ -36,7 +52,7 @@ class SubmitPendaftaran extends EditRecord
                 ->body('Lengkapi semua data pendaftaran terlebih dahulu.')
                 ->persistent()
                 ->send();
-                
+
             $this->redirect(PendaftaranResource::getUrl('index'));
         }
     }

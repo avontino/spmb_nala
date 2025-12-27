@@ -22,7 +22,7 @@ use Illuminate\Support\HtmlString;
 class EditNilaiRaport extends EditRecord
 {
     use PreventEditWhenSubmitted;
-    
+
     protected static string $resource = PendaftaranResource::class;
     
     protected string $verificationField = 'nilai_raport_ok';

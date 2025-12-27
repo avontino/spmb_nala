@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 class EditDataSekolahAsal extends EditRecord
 {
     use PreventEditWhenSubmitted;
-    
+
     protected static string $resource = PendaftaranResource::class;
     
     // ✅ SET VERIFICATION FIELD

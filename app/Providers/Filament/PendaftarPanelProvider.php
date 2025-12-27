@@ -22,6 +22,8 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Pendaftar\Pages\Auth\Login;
+use App\Http\Middleware\CheckRegistrationOpen;
+use Carbon\Carbon;
 
 class PendaftarPanelProvider extends PanelProvider
 {
@@ -175,38 +177,60 @@ class PendaftarPanelProvider extends PanelProvider
     }
     
     /**
+     * Helper: Cek apakah pendaftaran sudah ditutup
+     */
+    protected function isRegistrationClosed(): bool
+    {
+        $closedDate = config('app.register_closed_date');
+
+        if (!$closedDate) {
+            return false;
+        }
+
+        return Carbon::now()->gte(Carbon::parse($closedDate));
+    }
+
+    /**
      * ✅ Method untuk membuat navigation groups dengan menu dinamis
      */
     protected function getNavigationGroups(): array
     {
         // Ambil data pendaftaran user yang sedang login
         $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())->first();
-        
+
         $groups = [];
-        
+
+        // Cek apakah pendaftaran sudah ditutup
+        $isClosed = $this->isRegistrationClosed();
+
         // GROUP 1: Menu Utama
+        $menuItems = [
+            NavigationItem::make('Dashboard')
+                ->icon('heroicon-o-home')
+                ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.pages.dashboard'))
+                ->url(fn () => route('filament.pendaftar.pages.dashboard')),
+        ];
+
+        // Hanya tampilkan menu "Daftar Pendaftaran" jika pendaftaran masih dibuka
+        if (!$isClosed) {
+            $menuItems[] = NavigationItem::make('Daftar Pendaftaran')
+                ->icon('heroicon-o-list-bullet')
+                ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.index'))
+                ->badge($this->getPendaftaranBadge($pendaftaran))
+                ->url(fn () => PendaftaranResource::getUrl('index'));
+        }
+
         $groups[] = NavigationGroup::make('Menu Utama')
-            ->items([
-                NavigationItem::make('Dashboard')
-                    ->icon('heroicon-o-home')
-                    ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.pages.dashboard'))
-                    ->url(fn () => route('filament.pendaftar.pages.dashboard')),
-                    
-                NavigationItem::make('Daftar Pendaftaran')
-                    ->icon('heroicon-o-list-bullet')
-                    ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.index'))
-                    ->badge($this->getPendaftaranBadge($pendaftaran))
-                    ->url(fn () => PendaftaranResource::getUrl('index')),
-            ]);
-        
-        // GROUP 2: Form Pendaftaran (hanya tampil jika ada data pendaftaran)
-        if ($pendaftaran) {
+            ->items($menuItems);
+
+        // GROUP 2: Form Pendaftaran (hanya tampil jika pendaftaran masih dibuka dan ada data pendaftaran)
+        if (!$isClosed && $pendaftaran) {
     $completionStatus = $pendaftaran->getCompletionStatus();
-    
+
     // ✅ CEK APAKAH ADA REVISI YANG DIPERLUKAN
     $needsRevision = $pendaftaran->status === 'needs_revision';
     $revisionFields = [];
-    
+
     if ($needsRevision && $pendaftaran->latestVerifikasi) {
         $verifikasi = $pendaftaran->latestVerifikasi;
         $revisionFields = [
@@ -217,7 +241,7 @@ class PendaftarPanelProvider extends PanelProvider
             'prestasi_organisasi' => !$verifikasi->prestasi_organisasi_ok,
         ];
     }
-    
+
     $groups[] = NavigationGroup::make('📝 Isi Form Pendaftaran')
         ->items([
             NavigationItem::make('1. Data Pribadi')

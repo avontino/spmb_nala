@@ -16,7 +16,7 @@ return new class extends Migration
             Schema::create('verifikasi', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('pendaftaran_id')->constrained('pendaftaran')->onDelete('cascade');
-                $table->foreignId('verifikator_id')->nullable()->constrained('users')->onDelete('set null');
+                $table->foreignId('verifikator_id')->nullable(true)->constrained('users')->onDelete('set null');
                 $table->enum('status', ['pending', 'approved', 'needs_revision', 'rejected'])->default('pending');
                 $table->text('catatan_verifikasi')->nullable(); // Catatan internal verifikator
                 $table->text('catatan_revisi')->nullable(); // Catatan untuk pendaftar

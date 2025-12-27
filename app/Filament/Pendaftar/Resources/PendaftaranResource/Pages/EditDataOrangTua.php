@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Storage;
 class EditDataOrangTua extends EditRecord
 {
     use PreventEditWhenSubmitted;
-    
+
     protected static string $resource = PendaftaranResource::class;
     
     // ✅ SET VERIFICATION FIELD

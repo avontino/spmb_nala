@@ -123,4 +123,18 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Register Closed DateTime
+    |--------------------------------------------------------------------------
+    |
+    | Tanggal dan waktu penutupan pendaftaran. Setelah waktu ini, pendaftar
+    | tidak dapat melakukan registrasi baru.
+    |
+    | Format: Y-m-d H:i:s (contoh: 2025-12-27 15:00:00)
+    |
+    */
+
+    'register_closed_date' => env('REGISTER_CLOSED_DATE', '2025-12-27 15:00:00'),
+
 ];

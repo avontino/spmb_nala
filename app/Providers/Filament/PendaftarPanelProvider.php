@@ -67,7 +67,7 @@ class PendaftarPanelProvider extends PanelProvider
                             padding: 0.5rem 0.75rem !important;
                             margin: 0.25rem 0 !important;
                         }
-                        
+
                         /* Group yang sedang expanded/open */
                         .fi-sidebar-group-button[aria-expanded="true"] {
                             font-weight: 700 !important;
@@ -76,24 +76,24 @@ class PendaftarPanelProvider extends PanelProvider
                             border-radius: 0.5rem !important;
                             border-left: 4px solid #2563eb !important;
                         }
-                        
+
                         /* Group label text saat expanded */
                         .fi-sidebar-group-button[aria-expanded="true"] .fi-sidebar-group-label {
                             font-weight: 700 !important;
                             color: #1d4ed8 !important;
                         }
-                        
+
                         /* Group icon saat expanded */
                         .fi-sidebar-group-button[aria-expanded="true"] svg {
                             color: #2563eb !important;
                         }
-                        
+
                         /* Hover effect pada group */
                         .fi-sidebar-group-button:hover {
                             background-color: rgba(59, 130, 246, 0.08) !important;
                             border-radius: 0.5rem !important;
                         }
-                        
+
                         /* ===== ACTIVE MENU ITEM STYLING ===== */
                         .fi-sidebar-item-active .fi-sidebar-item-button {
                             font-weight: 700 !important;
@@ -101,62 +101,77 @@ class PendaftarPanelProvider extends PanelProvider
                             border-left: 4px solid #2563eb !important;
                             border-radius: 0.375rem !important;
                         }
-                        
+
                         .fi-sidebar-item-active .fi-sidebar-item-label {
                             font-weight: 700 !important;
                             color: #1d4ed8 !important;
                         }
-                        
+
                         /* Icon pada menu aktif */
                         .fi-sidebar-item-active .fi-sidebar-item-icon {
                             color: #2563eb !important;
                         }
-                        
+
                         /* ===== HOVER EFFECT MENU ITEM ===== */
                         .fi-sidebar-item-button:hover {
                             background-color: rgba(59, 130, 246, 0.08) !important;
                             border-radius: 0.375rem !important;
                         }
-                        
+
                         /* ===== BADGE STYLING ===== */
                         .fi-sidebar-item-badge {
                             font-weight: 600 !important;
                             font-size: 0.7rem !important;
                         }
-                        
+
                         /* ===== GENERAL MENU ITEM ===== */
                         .fi-sidebar-item-button {
                             transition: all 0.2s ease !important;
                             margin: 0.125rem 0 !important;
                         }
-                        
+
                         .fi-sidebar-item-label {
                             transition: all 0.2s ease !important;
                         }
-                        
+
                         /* ===== DARK MODE SUPPORT ===== */
                         .dark .fi-sidebar-group-button {
                             color: #d1d5db !important;
                         }
-                        
+
                         .dark .fi-sidebar-group-button[aria-expanded="true"] {
                             color: #93c5fd !important;
                             background-color: rgba(59, 130, 246, 0.2) !important;
                         }
-                        
+
                         .dark .fi-sidebar-item-active .fi-sidebar-item-button {
                             background-color: rgba(59, 130, 246, 0.25) !important;
                         }
-                        
+
                         .dark .fi-sidebar-item-active .fi-sidebar-item-label {
                             color: #93c5fd !important;
                         }
-                        
+
                         .dark .fi-sidebar-item-button:hover {
                             background-color: rgba(59, 130, 246, 0.15) !important;
                         }
                     </style>
                 '
+            )
+
+            // Modal Pemberitahuan Auto-Open Setelah Login
+            ->renderHook(
+                'panels::body.start',
+                function () {
+                    // Cek apakah ada session untuk show modal
+                    if (session()->has('show_welcome_modal')) {
+                        session()->forget('show_welcome_modal');
+
+                        return view('filament.pendaftar.components.welcome-modal');
+                    }
+
+                    return '';
+                }
             )
             
             ->middleware([

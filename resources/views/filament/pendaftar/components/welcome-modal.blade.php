@@ -4,8 +4,27 @@
 @endphp
 
 <div
-    x-data="{ open: true }"
-    x-init="$nextTick(() => { open = true })"
+    x-data="{
+        open: false,
+        dontShowAgain: false,
+        init() {
+            // Cek localStorage apakah user sudah memilih untuk tidak menampilkan lagi hari ini
+            const hideUntil = localStorage.getItem('hideWelcomeModal');
+            const today = new Date().toDateString();
+
+            if (!hideUntil || hideUntil !== today) {
+                this.open = true;
+            }
+        },
+        closeModal() {
+            if (this.dontShowAgain) {
+                // Simpan tanggal hari ini ke localStorage
+                const today = new Date().toDateString();
+                localStorage.setItem('hideWelcomeModal', today);
+            }
+            this.open = false;
+        }
+    }"
     x-show="open"
     x-cloak
     class="fixed inset-0 z-50 overflow-y-auto"
@@ -21,7 +40,7 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-        @click="open = false"
+        @click="closeModal()"
     ></div>
 
     {{-- Modal Content --}}
@@ -50,7 +69,7 @@
                         </h3>
                     </div>
                     <button
-                        @click="open = false"
+                        @click="closeModal()"
                         type="button"
                         class="text-white hover:text-gray-200 transition-colors"
                     >
@@ -91,15 +110,15 @@
                                         <ul class="list-disc list-inside space-y-1 ml-2">
                                             <li>Lakukan pembayaran biaya seleksi tahap 2 melalui VA: <strong>{{ $pendaftaran->penerimaan->nomor_va }}</strong></li>
                                             <li>Seleksi Tahap 2: <strong>5-10 Januari 2026</strong></li>
-                                            <li>Sesi kehadiran: <strong>{{ $pendaftaran->penerimaan->sesi }}</strong></li>
+                                            <li><strong>{{ $pendaftaran->penerimaan->sesi }}</strong></li>
                                         </ul>
                                     </div>
                                 </div>
                             @else
-                                <div class="rounded-lg bg-gray-50 border-2 border-gray-300 p-4 shadow-sm">
+                                <div class="rounded-lg bg-red-50 border-2 border-red-300 p-4 shadow-sm">
                                     <div class="flex items-start gap-3">
-                                        <div class="p-2 bg-gray-200 rounded-lg">
-                                            <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <div class="p-2 bg-red-200 rounded-lg">
+                                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </div>
@@ -173,21 +192,15 @@
                     @endif
 
                     {{-- WARNING CALO & PENIPUAN --}}
-                    <div class="rounded-lg bg-yellow-50 p-4 border-2 border-yellow-300 shadow-sm">
+                    <div class="rounded-lg bg-yellow-50 p-4 border-2 border-yellow-100 shadow-sm">
                         <div class="flex items-center gap-3">
-                            <div class="flex-shrink-0 bg-yellow-100 p-2 rounded-lg">
-                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-red-900 mb-2 text-base">
-                                    WASPADA TERHADAP CALO & PENIPUAN
+                            
+                            <div>
+                                <h4 class="font-bold text-orange-700 text-base">
+                                    WASPADA TERHADAP CALO & PENIPUAN 
+                                        SELEKSI SPMB SMAN TARUNA NALA JAWA TIMUR TAHUN AJARAN 2026/2027
                                 </h4>
-                                <p class="text-sm text-red-800 font-semibold mb-1">
-                                    SELEKSI SPMB SMAN TARUNA NALA JAWA TIMUR TAHUN AJARAN 2026/2027
-                                </p>
-                                <p class="text-sm text-red-700">
+                                <p class="text-sm text-orange-700">
                                     Pengumuman resmi hanya melalui <span class="font-bold">akun SPMB masing-masing pendaftar</span> dan <span class="font-bold">humas sekolah</span>.
                                 </p>
                             </div>
@@ -198,13 +211,26 @@
 
             {{-- Footer --}}
             <div class="bg-gray-50 px-6 py-4 sticky bottom-0">
-                <button
-                    @click="open = false"
-                    type="button"
-                    class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
-                >
-                    Saya Mengerti
-                </button>
+                <div class="space-y-3">
+                    {{-- Checkbox Jangan Tampilkan Lagi --}}
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            x-model="dontShowAgain"
+                            class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                        >
+                        <span class="text-sm text-gray-700">Jangan tampilkan lagi hari ini</span>
+                    </label>
+
+                    {{-- Button Saya Mengerti --}}
+                    <button
+                        @click="closeModal()"
+                        type="button"
+                        class="w-full rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+                    >
+                        Saya Mengerti
+                    </button>
+                </div>
             </div>
         </div>
     </div>

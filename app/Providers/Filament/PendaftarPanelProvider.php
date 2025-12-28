@@ -159,14 +159,12 @@ class PendaftarPanelProvider extends PanelProvider
                 '
             )
 
-            // Modal Pemberitahuan Auto-Open Setelah Login
+            // Modal Pemberitahuan Auto-Open
             ->renderHook(
                 'panels::body.start',
                 function () {
-                    // Cek apakah ada session untuk show modal
-                    if (session()->has('show_welcome_modal')) {
-                        session()->forget('show_welcome_modal');
-
+                    // Selalu tampilkan modal untuk user yang authenticated
+                    if (auth()->check()) {
                         return view('filament.pendaftar.components.welcome-modal');
                     }
 

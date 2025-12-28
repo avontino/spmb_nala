@@ -6,8 +6,6 @@ use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\Login as BaseLogin;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Illuminate\Support\Facades\Session;
 
 class Login extends BaseLogin
 {
@@ -55,15 +53,5 @@ class Login extends BaseLogin
     public function hasPasswordResetLink(): bool
     {
         return true; // ← Ini yang membuat link muncul
-    }
-
-    public function authenticate(): ?LoginResponse
-    {
-        $response = parent::authenticate();
-
-        // Set session untuk menampilkan welcome modal
-        Session::put('show_welcome_modal', true);
-
-        return $response;
     }
 }

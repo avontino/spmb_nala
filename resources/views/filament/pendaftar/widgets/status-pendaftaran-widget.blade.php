@@ -84,7 +84,7 @@
                                     Mohon melakukan pembayaran biaya seleksi tahap 2 melalui Virtual Account bank jatim Ananda dengan nomor <strong>{{ $pendaftaran->penerimaan->nomor_va }}</strong>. <br>
                                     Jangan lupa mempersiapkan diri untuk Seleksi Tahap 2 di SMA Negeri Taruna Nala Jawa Timur pada tanggal 5-10 Januari 2026. <br>
                                     Anda wajib hadir di SMAN Taruna Nala Jawa Timur pada <strong>{{ $pendaftaran->penerimaan->sesi }}</strong>, silahkan membaca panduan pada tautan berikut. <br>
-                                    Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia PPDB SMANTARNALA Tahun 2026)<br>
+                                    Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia SPMB SMANTARNALA Tahun 2026)<br>
                                 </p>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Download Panduan Seleksi
+                                Unduh Panduan Seleksi Tahap 2
                             </a>
                             
                         </div>
@@ -132,7 +132,7 @@
                                     Terima kasih <strong>{{ $pendaftaran->dataPribadi->nama_lengkap }}</strong> atas partisipasi Ananda dalam proses seleksi tahap 1 di SMA Negeri Taruna Nala Jawa Timur. <br>
                                     Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda belum berhasil lolos ke tahap berikutnya. <br>
                                     Kami mengapresiasi usaha dan dedikasi Ananda selama proses seleksi ini. Jangan berkecil hati, teruslah berusaha dan tingkatkan kemampuan untuk kesempatan di masa depan. <br>
-                                    Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda. (Panitia PPDB SMANTARNALA Tahun 2026)<br>
+                                    Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda. (Panitia SPMB SMANTARNALA Tahun 2026)<br>
                                 </p>
                             </div>
                         </div>

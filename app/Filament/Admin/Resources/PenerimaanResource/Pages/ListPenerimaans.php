@@ -4,14 +4,11 @@ namespace App\Filament\Admin\Resources\PenerimaanResource\Pages;
 
 use App\Filament\Admin\Resources\PenerimaanResource;
 use App\Imports\PenerimaanImport;
-use App\Jobs\ProcessPenerimaanImport;
-use App\Models\ImportLog;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class ListPenerimaans extends ListRecords
@@ -61,36 +58,13 @@ class ListPenerimaans extends ListRecords
                     try {
                         $file = $data['file'];
                         $importId = uniqid('import_', true);
-                        $userId = Auth::id();
+                        $userId = auth()->id();
 
-                        // Simpan file ke storage temporary
-                        if ($file instanceof \Illuminate\Http\UploadedFile) {
-                            $fileName = 'imports/' . $importId . '_' . $file->getClientOriginalName();
-                            $filePath = $file->storeAs('', $fileName, 'local');
-                            $originalFileName = $file->getClientOriginalName();
-                        } else {
-                            // File sudah tersimpan di storage
-                            $fileName = 'imports/' . $importId . '_' . basename($file);
-                            Storage::disk('local')->move($file, $fileName);
-                            $filePath = $fileName;
-                            $originalFileName = basename($file);
-                        }
+                        // Langsung import menggunakan PenerimaanImport
+                        // Karena implement ShouldQueue, akan otomatis jadi queue job
+                        $import = new PenerimaanImport($importId, $userId);
 
-                        // Buat import log
-                        ImportLog::create([
-                            'import_id' => $importId,
-                            'user_id' => $userId,
-                            'type' => 'penerimaan',
-                            'status' => 'queued',
-                            'file_name' => $originalFileName,
-                        ]);
-
-                        // Dispatch job ke queue
-                        ProcessPenerimaanImport::dispatch(
-                            Storage::disk('local')->path($filePath),
-                            $importId,
-                            $userId
-                        );
+                        Excel::import($import, $file);
 
                         Notification::make()
                             ->title('Import dimulai')

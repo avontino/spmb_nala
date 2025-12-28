@@ -4,16 +4,21 @@ namespace App\Filament\Admin\Resources\PenerimaanResource\Pages;
 
 use App\Filament\Admin\Resources\PenerimaanResource;
 use App\Imports\PenerimaanImport;
+use App\Jobs\ProcessPenerimaanImport;
+use App\Models\ImportLog;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ListPenerimaans extends ListRecords
 {
     protected static string $resource = PenerimaanResource::class;
+
+    protected $listeners = ['refreshPenerimaanList' => '$refresh'];
 
     protected function getHeaderActions(): array
     {
@@ -55,28 +60,47 @@ class ListPenerimaans extends ListRecords
                 ->action(function (array $data) {
                     try {
                         $file = $data['file'];
+                        $importId = uniqid('import_', true);
+                        $userId = Auth::id();
 
-                        $import = new PenerimaanImport;
-
+                        // Simpan file ke storage temporary
                         if ($file instanceof \Illuminate\Http\UploadedFile) {
-                            $extension = strtolower($file->getClientOriginalExtension());
-                            $readerType = $extension === 'xlsx' ? \Maatwebsite\Excel\Excel::XLSX : \Maatwebsite\Excel\Excel::XLS;
-                            Excel::import($import, $file->getRealPath(), null, $readerType);
+                            $fileName = 'imports/' . $importId . '_' . $file->getClientOriginalName();
+                            $filePath = $file->storeAs('', $fileName, 'local');
+                            $originalFileName = $file->getClientOriginalName();
                         } else {
-                            $filePath = Storage::disk('local')->path($file);
-                            Excel::import($import, $filePath);
-                            Storage::disk('local')->delete($file);
+                            // File sudah tersimpan di storage
+                            $fileName = 'imports/' . $importId . '_' . basename($file);
+                            Storage::disk('local')->move($file, $fileName);
+                            $filePath = $fileName;
+                            $originalFileName = basename($file);
                         }
 
+                        // Buat import log
+                        ImportLog::create([
+                            'import_id' => $importId,
+                            'user_id' => $userId,
+                            'type' => 'penerimaan',
+                            'status' => 'queued',
+                            'file_name' => $originalFileName,
+                        ]);
+
+                        // Dispatch job ke queue
+                        ProcessPenerimaanImport::dispatch(
+                            Storage::disk('local')->path($filePath),
+                            $importId,
+                            $userId
+                        );
+
                         Notification::make()
-                            ->title('Import selesai')
-                            ->body("Berhasil diinsert: {$import->inserted}, Gagal: {$import->failed}")
+                            ->title('Import dimulai')
+                            ->body('Import data sedang diproses di background. Anda akan menerima notifikasi ketika selesai.')
                             ->success()
                             ->send();
 
                     } catch (\Exception $e) {
                         Notification::make()
-                            ->title('Gagal import data')
+                            ->title('Gagal memulai import')
                             ->body($e->getMessage())
                             ->danger()
                             ->send();

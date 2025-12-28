@@ -4,27 +4,52 @@ namespace App\Imports;
 
 use App\Models\Penerimaan;
 use App\Models\Pendaftaran;
+use App\Models\ImportLog;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class PenerimaanImport implements ToCollection, WithHeadingRow, WithValidation
+class PenerimaanImport implements ToCollection, WithHeadingRow, WithValidation, WithChunkReading, ShouldQueue
 {
     public int $inserted = 0;
     public int $failed = 0;
+    private string $importId;
+    private int $userId;
+
+    public function __construct(string $importId, int $userId)
+    {
+        $this->importId = $importId;
+        $this->userId = $userId;
+    }
 
     public function collection(Collection $rows)
     {
+        $importLog = ImportLog::where('import_id', $this->importId)->first();
+
         foreach ($rows as $row) {
             $result = $this->processRow($row);
-            if ($result) {
-                $this->inserted++;
-            } else {
-                $this->failed++;
+
+            // Update progress di database
+            if ($importLog) {
+                $importLog->incrementProcessed();
+                if ($result) {
+                    $importLog->incrementInserted();
+                    $this->inserted++;
+                } else {
+                    $importLog->incrementFailed();
+                    $this->failed++;
+                }
             }
         }
+    }
+
+    public function chunkSize(): int
+    {
+        return 100;
     }
 
     private function processRow($row)
@@ -59,7 +84,7 @@ class PenerimaanImport implements ToCollection, WithHeadingRow, WithValidation
             'status' => $row['status'] ?? 'lolos',
             'nomor_va' => $row['nomor_va'] ?? null,
             'sesi' => $row['sesi'] ?? null,
-            'last_update_by' => Auth::id(),
+            'last_update_by' => $this->userId,
         ]);
 
         return true;

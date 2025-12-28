@@ -78,3 +78,52 @@ Route::middleware(['auth'])->group(function () {
         return $pdf->stream($filename);
     })->name('cetak-pendaftaran');
 });
+
+// Route for downloading panduan (only for "lolos" users)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/download-panduan-tahap-2', function () {
+        // Get user's pendaftaran
+        $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())
+            ->with('penerimaan')
+            ->first();
+
+        // Validasi: User harus punya pendaftaran
+        if (!$pendaftaran) {
+            abort(403, 'Anda belum memiliki pendaftaran.');
+        }
+
+        // Validasi: Harus ada data penerimaan
+        if (!$pendaftaran->penerimaan) {
+            abort(403, 'Anda belum memiliki data penerimaan.');
+        }
+
+        // Validasi: Status penerimaan harus "lolos"
+        if ($pendaftaran->penerimaan->status !== 'lolos') {
+            abort(403, 'Maaf, file panduan hanya dapat diakses oleh peserta yang dinyatakan lolos seleksi tahap 1.');
+        }
+
+        // Download file
+        $fileName = 'PENGUMUMAN_PPDB_SMAN_TARUNA_NALA_JAWA_TIMUR_TAHAP_I_TAHUN_AJARAN_2026_2027_&_LAMPIRAN_DENAH_KEDATANGAN.pdf';
+        // Path file panduan (simpan di storage/app/private/panduan)
+        // File TIDAK disimpan di public agar tidak bisa diakses langsung
+        $filePath = storage_path('app/private/'. $fileName);
+
+        // Validasi: File harus ada
+        if (!file_exists($filePath)) {
+            abort(404, 'File panduan tidak ditemukan. Silakan hubungi panitia.');
+        }
+
+        // Log aktivitas download
+        \Log::info('Panduan Downloaded', [
+            'user_id' => auth()->id(),
+            'pendaftaran_id' => $pendaftaran->id,
+            'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+        ]);
+
+        
+
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    })->name('download-panduan-tahap-2');
+});

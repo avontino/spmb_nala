@@ -55,53 +55,74 @@
         {{-- Section Status Penerimaan --}}
         @if($pendaftaran->penerimaan)
             @if($pendaftaran->penerimaan->status === 'lolos')
-                <div class="relative overflow-hidden bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
-                    <div class=" flex gap-3 mb-4 items-center">
-                        <div class="p-2 bg-green-100 rounded-lg">
-                            <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-green-800">
-                                Status Penerimaan: LOLOS
-                            </h3>
-                            <p class="text-sm text-green-700">
-                                Nomor: <span class="font-semibold">{{ $pendaftaran->nomor_pendaftaran }}</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- Info Seleksi Offline untuk yang diterima --}}
-                    <div class="rounded-xl mb-4">
-
-                        <div class="flex items-center gap-3 mb-4">
-                            
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
+                    {{-- Section Penerimaan Lolos --}}
+                    <div class="relative overflow-hidden ">
+                        <div class=" flex gap-3 mb-4 items-center">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
                             <div>
-
-                                <p class="text-sm text-green-900 mb-3 space-y-1.5">
-                                    Selamat <strong>{{ $pendaftaran->dataPribadi->nama_lengkap }}</strong> asal sekolah <strong>{{ $pendaftaran->dataSekolahAsal->nama_sekolah }}</strong>, Ananda dinyatakan Lolos Seleksi Tahap 1. <br>
-                                    Mohon melakukan pembayaran biaya seleksi tahap 2 melalui Virtual Account bank jatim Ananda dengan nomor <strong>{{ $pendaftaran->penerimaan->nomor_va }}</strong>. <br>
-                                    Jangan lupa mempersiapkan diri untuk Seleksi Tahap 2 di SMA Negeri Taruna Nala Jawa Timur pada tanggal 5-10 Januari 2026. <br>
-                                    Anda wajib hadir di SMAN Taruna Nala Jawa Timur pada <strong>{{ $pendaftaran->penerimaan->sesi }}</strong>, silahkan membaca panduan pada tautan berikut. <br>
-                                    Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia SPMB SMANTARNALA Tahun 2026)<br>
+                                <h3 class="text-lg font-bold text-green-800">
+                                    Status Penerimaan: LOLOS
+                                </h3>
+                                <p class="text-sm text-green-700">
+                                    Nomor: <span class="font-semibold">{{ $pendaftaran->nomor_pendaftaran }}</span>
                                 </p>
                             </div>
                         </div>
 
-                        {{-- Download Buttons --}}
-                        <div class="grid grid-cols-1">
-                            <a href="#"
-                                class="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                Unduh Panduan Seleksi Tahap 2
-                            </a>
-                            
+                        {{-- Info Seleksi Offline untuk yang diterima --}}
+                        <div class="rounded-xl mb-4">
+
+                            <div class="flex items-center gap-3 mb-4">
+
+                                <div>
+
+                                    <div class="text-sm text-green-900 mb-3 space-y-1.5">
+                                        Selamat <strong>{{ $pendaftaran->dataPribadi->nama_lengkap }}</strong> asal sekolah <strong>{{ $pendaftaran->dataSekolahAsal->nama_sekolah }}</strong>, Ananda dinyatakan Lolos Seleksi Tahap 1. </p>
+                                        <p>Mohon melakukan pembayaran biaya seleksi tahap 2 melalui Virtual Account bank jatim Ananda dengan nomor <strong>{{ $pendaftaran->penerimaan->nomor_va }}</strong>. </p>
+                                        <p>Jangan lupa mempersiapkan diri untuk Seleksi Tahap 2 di SMA Negeri Taruna Nala Jawa Timur pada tanggal 5-10 Januari 2026. </p>
+                                        <p>Anda wajib hadir di SMAN Taruna Nala Jawa Timur pada <strong>{{ $pendaftaran->penerimaan->sesi }}</strong>, silahkan membaca panduan pada tautan berikut. </p>
+                                        <p>Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia SPMB SMANTARNALA Tahun 2026)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Download Buttons --}}
+                            <div class="grid grid-cols-1">
+                                <a href="{{ route('download-panduan-tahap-2') }}"
+                                    class="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Unduh Panduan Seleksi Tahap 2
+                                </a>
+
+                            </div>
                         </div>
+
                     </div>
-                    
+
+                    {{-- Section Skema Kedatangan Casis --}}
+                    <div class="relative overflow-hidden ">
+                        <div class="flex gap-3 mb-3 items-center">
+                            <div>
+                                <h3 class="text-lg font-bold text-green-800">
+                                    Skema Kedatangan Casis
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="rounded-xl overflow-hidden border-2 border-gray-200">
+                            <img src="{{ asset('images/denah.jpeg') }}"
+                                 alt="Skema Kedatangan Casis"
+                                 class="w-full h-auto object-contain">
+                        </div>
+
+                    </div>
                 </div>
             @else
                 <div class="relative overflow-hidden bg-white border border-red-200 rounded-2xl p-6 shadow-lg">

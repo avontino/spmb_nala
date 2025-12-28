@@ -165,7 +165,9 @@ class PendaftarPanelProvider extends PanelProvider
                 function () {
                     // Selalu tampilkan modal untuk user yang authenticated
                     if (auth()->check()) {
-                        return view('filament.pendaftar.components.welcome-modal');
+                        if (auth()->user()->pendaftaran->penerimaan) {
+                            return view('filament.pendaftar.components.welcome-modal');
+                        }
                     }
 
                     return '';
@@ -185,6 +187,8 @@ class PendaftarPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                // ensure pendaftar
+                \App\Http\Middleware\EnsureUserIsPendaftar::class,
             ])
             ->authGuard('web');
     }

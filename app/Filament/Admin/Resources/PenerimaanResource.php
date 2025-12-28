@@ -69,7 +69,8 @@ class PenerimaanResource extends Resource
                     ->label('Nama Lengkap')
                     ->searchable()
                     ->sortable()
-                    ->placeholder('-'),
+                    // if null use user name
+                    ->placeholder(fn ($record) => $record->pendaftaran->user->name),
                 Tables\Columns\TextColumn::make('pendaftaran.user.nisn')
                     ->label('NISN')
                     ->searchable()

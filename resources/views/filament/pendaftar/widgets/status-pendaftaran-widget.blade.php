@@ -11,8 +11,8 @@
     @endphp
 
     <div class="space-y-4">
-        {{-- Header Section --}}
-        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
+        {{-- Header Section - hide --}}
+        {{-- <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
             <div class="flex items-start justify-between">
                 <div>
                     <h2 class="text-2xl font-bold mb-2 text-gray-900">
@@ -27,11 +27,11 @@
                     <div class="text-lg font-semibold text-gray-900">{{ now()->format('d M Y') }}</div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        {{-- Alert Registration Closed --}}
+        {{-- Alert Registration Closed - hide --}}
         @if($this->isRegistrationClosed())
-        <div class="relative overflow-hidden bg-red-400 rounded-2xl p-6 shadow-lg">
+        {{-- <div class="relative overflow-hidden bg-red-400 rounded-2xl p-6 shadow-lg">
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mt-20 -mr-20"></div>
 
             <div class="relative flex items-start gap-4">
@@ -49,7 +49,7 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
         @endif       
 
         {{-- Section Status Penerimaan --}}

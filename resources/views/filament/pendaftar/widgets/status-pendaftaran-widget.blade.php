@@ -353,7 +353,8 @@
         @endif
 
         {{-- Tombol Join WhatsApp Group --}}
-        <div class="relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
+        {{-- hide section --}}
+        {{-- <div class=" relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300">
             <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mt-20 -mr-20"></div>
 
             <div class="relative">
@@ -399,6 +400,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
+
     </div>
 </x-filament::widget>

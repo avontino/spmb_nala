@@ -53,6 +53,10 @@ class PenerimaanResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('sesi')
                     ->label('Sesi')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('sesi_interview')
+                    ->label('Sesi Interview Orang Tua')
+                    ->placeholder('Contoh: Sesi 1: Rabu, 8 Januari 2026, Pukul 08.00 WIB')
                     ->maxLength(255)
             ]);
     }
@@ -94,13 +98,19 @@ class PenerimaanResource extends Resource
                     ->label('Sesi')
                     ->searchable()
                     ->placeholder('-'),
+                Tables\Columns\TextColumn::make('sesi_interview')
+                    ->label('Sesi Interview')
+                    ->searchable()
+                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('lastUpdatedBy.name')
                     ->label('Terakhir Diupdate Oleh')
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Terakhir Diupdate')
                     ->dateTime('d/m/Y H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

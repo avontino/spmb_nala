@@ -114,6 +114,33 @@
                                         </ul>
                                     </div>
                                 </div>
+
+                                {{-- Section Pengumuman Wawancara Orang Tua --}}
+                                @if($pendaftaran->penerimaan->sesi_interview)
+                                <div class="rounded-lg bg-blue-50 border-2 border-blue-300 p-4 shadow-sm mt-3">
+                                    <div class="flex items-start gap-3 mb-3">
+                                        <div class="p-2 bg-blue-100 rounded-lg">
+                                            <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-blue-900 text-base mb-1">
+                                                PENGUMUMAN
+                                            </h4>
+                                            <p class="text-sm font-semibold text-blue-800">
+                                                SESI WAWANCARA ORANG TUA
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-sm text-blue-900 space-y-2">
+                                        <p>Bapak Ibu Orang Tua / Wali Murid dari <strong>{{ $pendaftaran->dataPribadi->nama_lengkap }}</strong> dengan nomor pendaftaran <strong>{{ $pendaftaran->nomor_pendaftaran }}</strong>, kami mengundang kehadirannya untuk melaksanakan wawancara berkaitan dengan pendaftaran putra/putrinya di SMAN Taruna Nala Jawa Timur pada:</p>
+                                        <p class="text-center font-bold text-blue-800 py-2 bg-blue-100 rounded-lg">{{ $pendaftaran->penerimaan->sesi_interview }}</p>
+                                        <p>Wawancara hanya diwakili oleh 1 orangtua saja. Setelah sesi wawancara selesai, orangtua bersama casis dapat langsung meninggalkan area Sekolah.</p>
+                                        <p class="mt-2">Terimakasih<br><strong>Panitia SPMB 2026</strong></p>
+                                    </div>
+                                </div>
+                                @endif
                             @else
                                 <div class="rounded-lg bg-red-50 border-2 border-red-300 p-4 shadow-sm">
                                     <div class="flex items-start gap-3">

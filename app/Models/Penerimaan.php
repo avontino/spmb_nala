@@ -16,6 +16,7 @@ class Penerimaan extends Model
         'nomor_va',
         'sesi',
         'last_update_by',
+        'sesi_interview',
     ];
 
     protected $casts = [

@@ -116,7 +116,7 @@
                                 </div>
 
                                 {{-- Section Pengumuman Wawancara Orang Tua --}}
-                                @if($pendaftaran->penerimaan->sesi_interview)
+                                @if($pendaftaran->penerimaan->sesi_interview && $pendaftaran->penerimaan->sesi_interview != 0)
                                 <div class="rounded-lg bg-blue-50 border-2 border-blue-300 p-4 shadow-sm mt-3">
                                     <div class="flex items-start gap-3 mb-3">
                                         <div class="p-2 bg-blue-100 rounded-lg">

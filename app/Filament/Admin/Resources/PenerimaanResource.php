@@ -19,11 +19,11 @@ class PenerimaanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?string $navigationLabel = 'Penerimaan';
+    protected static ?string $navigationLabel = 'Penerimaan Tahap 1';
 
-    protected static ?string $modelLabel = 'Penerimaan';
+    protected static ?string $modelLabel = 'Penerimaan Tahap 1';
 
-    protected static ?string $pluralModelLabel = 'Penerimaan';
+    protected static ?string $pluralModelLabel = 'Penerimaan Tahap 1';
 
     protected static ?int $navigationSort = 4;
 

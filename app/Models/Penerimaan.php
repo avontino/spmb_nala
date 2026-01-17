@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Penerimaan extends Model
 {
@@ -44,5 +45,10 @@ class Penerimaan extends Model
     public function lastUpdatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'last_update_by');
+    }
+
+    public function penerimaanTahap2(): HasOne
+    {
+        return $this->hasOne(PenerimaanTahap2::class);
     }
 }

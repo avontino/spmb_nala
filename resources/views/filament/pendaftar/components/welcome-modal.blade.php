@@ -119,8 +119,7 @@
                         <div class="space-y-3">
                             <div class="grid grid-cols-1 gap-3">
                                 <a
-                                    href="{{ asset('files/panduan-registrasi-murid-baru.pdf') }}"
-                                    target="_blank"
+                                    href="{{ route('download-hasil-akhir-seleksi-tahap-2') }}"
                                     class="flex items-center justify-center gap-2 px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg"
                                 >
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,8 +287,7 @@
                                     Gabung Grup WhatsApp Murid Baru
                                 </a>
                                 <a
-                                    href="{{ asset('files/panduan-registrasi-murid-baru.pdf') }}"
-                                    target="_blank"
+                                    href="{{ route('download-hasil-akhir-seleksi-tahap-2') }}"
                                     class="flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-gray-50 text-gray-700 text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg border border-gray-300"
                                 >
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

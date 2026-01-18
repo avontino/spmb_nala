@@ -126,4 +126,48 @@ Route::middleware(['auth'])->group(function () {
             'Content-Type' => 'application/pdf',
         ]);
     })->name('download-panduan-tahap-2');
+
+    Route::get('/download-hasil-akhir-seleksi-tahap-2', function () {
+        // Get user's pendaftaran
+        $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())
+            ->with('penerimaanTahap2')
+            ->first();
+
+        // Validasi: User harus punya pendaftaran
+        if (!$pendaftaran) {
+            abort(403, 'Anda belum memiliki pendaftaran.');
+        }
+
+        // Validasi: Harus ada data penerimaan tahap 2
+        if (!$pendaftaran->penerimaanTahap2) {
+            abort(403, 'Anda belum memiliki data penerimaan tahap 2.');
+        }
+
+        // Validasi: Status penerimaan harus "lolos" atau "cadangan"
+        if (!in_array($pendaftaran->penerimaanTahap2->status, ['lolos', 'cadangan'])) {
+            abort(403, 'Maaf, file panduan hanya dapat diakses oleh peserta yang dinyatakan lolos atau cadangan seleksi tahap 2.');
+        }
+
+        // Download file
+        $fileName = 'PENGUMUMAN_HASIL_SELEKSI_AKHIR_PPDB_SMAN_TARUNA_NALA_JATIM_TAHUN_AJARAN_2026_2027.pdf';
+        // Path file panduan (simpan di storage/app/private)
+        // File TIDAK disimpan di public agar tidak bisa diakses langsung
+        $filePath = storage_path('app/private/' . $fileName);
+
+        // Validasi: File harus ada
+        if (!file_exists($filePath)) {
+            abort(404, 'File panduan tidak ditemukan. Silakan hubungi panitia.');
+        }
+
+        // Log aktivitas download
+        \Log::info('Hasil Akhir Seleksi Tahap 2 Downloaded', [
+            'user_id' => auth()->id(),
+            'pendaftaran_id' => $pendaftaran->id,
+            'nomor_pendaftaran' => $pendaftaran->nomor_pendaftaran,
+        ]);
+
+        return response()->download($filePath, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);
+    })->name('download-hasil-akhir-seleksi-tahap-2');
 });

@@ -95,14 +95,14 @@
                     <div class="bg-white px-6 py-5">
                         <div class="space-y-4 text-sm text-gray-700">
                             <p>
-                                Salam sehat, <strong>{{ $namaCasis }}</strong> asal sekolah <strong>{{ $namaSekolah }}</strong>, Berdasarkan seleksi yang telah dilakukan, Ananda dinyatakan masuk pada kategori <span class="font-bold text-yellow-600">CADANGAN</span> dalam SPMB SMA Negeri Taruna Nala Jawa Timur. Ananda, masih berkesempatan melakukan registrasi ulang sebagai calon siswa apabila:
+                                Salam sehat, <strong>{{ $namaCasis }}</strong> asal sekolah <strong>{{ $namaSekolah }}</strong>, Berdasarkan seleksi yang telah dilakukan, Ananda dinyatakan masuk pada kategori <span class="font-bold text-yellow-600">CADANGAN</span> ({{ $penerimaanTahap2->sesi }}) dalam SPMB SMA Negeri Taruna Nala Jawa Timur. Ananda, masih berkesempatan melakukan registrasi ulang sebagai calon siswa apabila:
                             </p>
                             <ol class="list-decimal list-inside space-y-1 ml-2">
                                 <li>Terdapat Calon Murid yang mengundurkan diri.</li>
                                 <li>Terdapat Calon Murid yang tidak melakukan Registrasi sampai dengan tanggal 21 Januari 2026.</li>
                             </ol>
                             <p>
-                                Penggantian oleh casis lain yang berstatus sebagai cadangan dilakukan sesuai dengan urutan cadangan. Konfirmasi penggantian hanya akan dilakukan oleh panitia melalui nomor Panitia SPMB. Informasi lengkap tentang Registrasi Murid Baru dapat dilihat pada Panduan Registrasi Murid Baru melalui tautan dibawah ini.
+                                Penggantian oleh casis lain yang berstatus sebagai cadangan dilakukan sesuai dengan urutan cadangan. Konfirmasi penggantian hanya akan dilakukan oleh panitia melalui nomor Panitia SPMB dengan nomor WA <a href="https://wa.me/6281313085908" target="blank" class="font-weight-500 text-primary-500">081313085908</a>. Informasi lengkap tentang Registrasi Murid Baru dapat dilihat pada Panduan Registrasi Murid Baru melalui tautan dibawah ini.
                             </p>
                             <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
                                 <p class="text-red-700 font-medium">
@@ -127,16 +127,6 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
                                     Unduh Panduan Registrasi Murid Baru
-                                </a>
-                                <a
-                                    href="{{ asset('files/daftar-siswa-cadangan.pdf') }}"
-                                    target="_blank"
-                                    class="flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-gray-50 text-gray-700 text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg border border-gray-300"
-                                >
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    Daftar Siswa Cadangan
                                 </a>
                             </div>
                             <label class="flex items-center gap-2 cursor-pointer">
@@ -270,7 +260,7 @@
                             </div>
 
                             <p>
-                                Bagi casis yang tidak melaksanakan Registrasi hingga tanggal 21 januari 2026, maka akan digantikan oleh casis lain yang berstatus sebagai cadangan sesuai dengan urutan cadangan.
+                                Bagi casis yang tidak melaksanakan Registrasi hingga tanggal 21 januari 2026 Pukul 13.00 WIB, maka akan digantikan oleh casis lain yang berstatus sebagai cadangan sesuai dengan urutan cadangan. Jangan percaya kepada siapapun yang menawarkan jasa dengan mengatasnamakan Panitia SPMB SMANTARNALA. Proses SPMB hanya dilaksanakan melelui informasi resmi sekolah dengan nomor WA <a href="https://wa.me/6281313085908" target="blank" class="font-weight-500 text-primary-500">081313085908</a>.
                             </p>
 
                             <div class="p-3 bg-red-50 border border-red-200 rounded-lg">

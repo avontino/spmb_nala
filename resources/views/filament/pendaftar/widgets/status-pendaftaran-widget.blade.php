@@ -205,6 +205,7 @@
 
         @if($pendaftaran)
             {{-- Status Pendaftaran --}}
+            @if(!$penerimaanTahap2 && !$pendaftaran->penerimaan)
             <div id="status-pendaftaran" class="bg-white dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700 p-6 shadow-lg scroll-mt-4">
                 
                 <div class="flex items-center gap-3 mb-4">
@@ -361,7 +362,7 @@
                 </div>
 
             </div>
-
+            @endif
         @else
             {{-- Belum Ada Pendaftaran --}}
             <div class="bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 text-center">

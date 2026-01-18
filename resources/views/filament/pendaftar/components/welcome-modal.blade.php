@@ -288,7 +288,7 @@
                         <div class="space-y-3">
                             <div class="grid grid-cols-1 gap-3">
                                 <a
-                                    href="{{ config('app.link_grup_wa_lolos', '#') }}"
+                                    href="https://chat.whatsapp.com/Hbfx9TYmUeKIDcmbOBm535"
                                     target="_blank"
                                     class="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg"
                                 >

@@ -79,7 +79,7 @@
 
         {{-- Action Buttons --}}
         <div class="mt-4 grid grid-cols-1 gap-3">
-            <a href="{{ config('app.link_grup_wa_lolos', '#') }}"
+            <a href="https://chat.whatsapp.com/Hbfx9TYmUeKIDcmbOBm535"
                 target="_blank"
                 class="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

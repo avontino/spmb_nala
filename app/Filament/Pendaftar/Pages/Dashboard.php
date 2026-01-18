@@ -26,7 +26,6 @@ class Dashboard extends BaseDashboard
             RevisiNotificationWidget::class,
             StatusPendaftaranWidget::class,
             InformasiPentingWidget::class,
-
         ];
     }
 

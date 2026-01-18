@@ -2,9 +2,10 @@
 
 <x-filament::widget>
     @php
-        $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())->first();
+        $pendaftaran = \App\Models\Pendaftaran::with(['dataPribadi', 'dataSekolahAsal', 'penerimaan', 'penerimaanTahap2'])->where('user_id', auth()->id())->first();
         $user = auth()->user();
-        
+        $penerimaanTahap2 = $pendaftaran?->penerimaanTahap2;
+
         // ✅ GANTI DENGAN LINK WHATSAPP GROUP ANDA
         $whatsappGroupLink = 'https://chat.whatsapp.com/EpFXTPqpA12D7C7NOxVhSK';
         $whatsappGroupLink2 = 'https://chat.whatsapp.com/Ijw01R93Tya6927QCHazAT';
@@ -50,10 +51,15 @@
                 </div>
             </div>
         </div> --}}
-        @endif       
+        @endif
 
-        {{-- Section Status Penerimaan --}}
-        @if($pendaftaran->penerimaan)
+        {{-- Section Status Penerimaan Tahap 2 --}}
+        @if($penerimaanTahap2)
+            <x-status-penerimaan-tahap2 :penerimaanTahap2="$penerimaanTahap2" :pendaftaran="$pendaftaran" />
+        @endif
+
+        {{-- Section Status Penerimaan Tahap 1 (sembunyikan jika sudah ada tahap 2) --}}
+        @if($pendaftaran->penerimaan && !$penerimaanTahap2)
             @if($pendaftaran->penerimaan->status === 'lolos')
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
                     {{-- Section Penerimaan Lolos --}}

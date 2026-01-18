@@ -165,7 +165,9 @@ class PendaftarPanelProvider extends PanelProvider
                 function () {
                     // Selalu tampilkan modal untuk user yang authenticated
                     if (auth()->check()) {
-                        if (auth()->user()->pendaftaran->penerimaan) {
+                        $pendaftaran = auth()->user()->pendaftaran;
+                        // Tampilkan modal jika ada penerimaan tahap 1 atau penerimaan tahap 2
+                        if ($pendaftaran && ($pendaftaran->penerimaan || $pendaftaran->penerimaanTahap2)) {
                             return view('filament.pendaftar.components.welcome-modal');
                         }
                     }

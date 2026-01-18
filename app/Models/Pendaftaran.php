@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pendaftaran extends Model
@@ -80,6 +81,18 @@ class Pendaftaran extends Model
     public function penerimaan(): HasOne
     {
         return $this->hasOne(Penerimaan::class);
+    }
+
+    public function penerimaanTahap2(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PenerimaanTahap2::class,
+            Penerimaan::class,
+            'pendaftaran_id', // Foreign key on penerimaan table
+            'penerimaan_id',  // Foreign key on penerimaan_tahap2 table
+            'id',             // Local key on pendaftaran table
+            'id'              // Local key on penerimaan table
+        );
     }
 
     // Status Helper Methods

@@ -145,7 +145,7 @@ class PenerimaanTahap2Import implements ToCollection, WithHeadingRow, WithValida
                                 \Filament\Notifications\Actions\Action::make('view')
                                     ->button()
                                     ->label('Lihat Data Penerimaan Tahap 2')
-                                    ->url('/admin/penerimaan-tahap2s', shouldOpenInNewTab: false)
+                                    ->url(\App\Filament\Admin\Resources\PenerimaanTahap2Resource::getUrl('index'), shouldOpenInNewTab: false)
                                     ->close()
                                     ->markAsRead(),
                             ])

@@ -63,7 +63,7 @@
             </div>
 
             <p>
-                Bagi casis yang tidak melaksanakan Registrasi hingga tanggal 21 januari 2026 Pukul 13.00 WIB, maka akan digantikan oleh casis lain yang berstatus sebagai cadangan sesuai dengan urutan cadangan. Jangan percaya kepada siapapun yang menawarkan jasa dengan mengatasnamakan Panitia SPMB SMANTARNALA. Proses SPMB hanya dilaksanakan melelui informasi resmi sekolah dengan nomor WA <a href="https://wa.me/6281313085908" target="blank" class="font-weight-500 text-primary-500">081313085908</a>.
+                Bagi casis yang tidak melaksanakan Registrasi hingga tanggal 21 januari 2026 Pukul 13.00 WIB, maka akan digantikan oleh casis lain yang berstatus sebagai cadangan sesuai dengan urutan cadangan. Jangan percaya kepada siapapun yang menawarkan jasa dengan mengatasnamakan Panitia SPMB SMANTARNALA. Proses SPMB hanya dilaksanakan melalui informasi resmi sekolah dengan nomor WA <a href="https://wa.me/6281313085908" target="blank" class="font-weight-500 text-primary-500">081313085908</a>.
             </p>
 
             <div class="p-3 bg-red-50 border border-red-200 rounded-lg">

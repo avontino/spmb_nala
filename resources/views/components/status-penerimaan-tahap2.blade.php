@@ -88,7 +88,7 @@
                 Gabung Grup WhatsApp Murid Baru
             </a>
             <a href="{{ route('download-hasil-akhir-seleksi-tahap-2') }}"
-                class="flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-gray-50 text-gray-700 text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg border border-gray-300">
+                class="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
@@ -140,7 +140,7 @@
         {{-- Action Buttons --}}
         <div class="mt-4 grid grid-cols-1 gap-3">
             <a href="{{ route('download-hasil-akhir-seleksi-tahap-2') }}"
-                class="flex items-center justify-center gap-2 px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
+                class="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition shadow-md hover:shadow-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
@@ -170,7 +170,16 @@
 
         <div class="text-sm text-gray-700 space-y-3">
             <p>
-                Mohon maaf, Berdasarkan seleksi yang telah dilakukan Ananda <strong>{{ $namaCasis }}</strong> dinyatakan <span class="font-bold text-red-600">tidak lolos</span> SPMB SMA Negeri Taruna Nala Jawa Timur. Tetap semangat, semoga bisa diterima di sekolah lain yang lebih baik.
+                Terima kasih <strong>{{ $namaCasis }}</strong> atas partisipasi Ananda dalam proses SPMB di SMA Negeri Taruna Nala Jawa Timur.
+            </p>
+            <p>
+                Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda <span class="font-bold text-red-600">tidak lolos</span> dalam penerimaan Tahun Pelajaran 2026/2027.
+            </p>
+            <p>
+                Kami mengapresiasi usaha dan dedikasi Ananda selama proses seleksi ini. Jangan berkecil hati, teruslah berusaha dan tingkatkan kemampuan untuk kesempatan di masa depan.
+            </p>
+            <p>
+                Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda.
             </p>
             <p class="text-gray-600 italic text-center">
                 (Panitia SPMB SMANTARNALA Tahun 2026)

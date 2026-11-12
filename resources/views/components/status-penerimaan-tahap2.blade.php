@@ -73,7 +73,7 @@
             </div>
 
             <p class="text-gray-600 italic text-center">
-                (Panitia SPMB SMANTARNALA Tahun 2026)
+                (Panitia SPMB SMANTARNALA Tahun 2027)
             </p>
         </div>
 
@@ -133,7 +133,7 @@
                 </p>
             </div>
             <p class="text-gray-600 italic text-center">
-                (Panitia SPMB SMANTARNALA Tahun 2026)
+                (Panitia SPMB SMANTARNALA Tahun 2027)
             </p>
         </div>
 
@@ -173,7 +173,7 @@
                 Terima kasih <strong>{{ $namaCasis }}</strong> atas partisipasi Ananda dalam proses SPMB di SMA Negeri Taruna Nala Jawa Timur.
             </p>
             <p>
-                Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda <span class="font-bold text-red-600">tidak lolos</span> dalam penerimaan Tahun Pelajaran 2026/2027.
+                Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda <span class="font-bold text-red-600">tidak lolos</span> dalam penerimaan Tahun Pelajaran 2027/2028.
             </p>
             <p>
                 Kami mengapresiasi usaha dan dedikasi Ananda selama proses seleksi ini. Jangan berkecil hati, teruslah berusaha dan tingkatkan kemampuan untuk kesempatan di masa depan.
@@ -182,7 +182,7 @@
                 Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda.
             </p>
             <p class="text-gray-600 italic text-center">
-                (Panitia SPMB SMANTARNALA Tahun 2026)
+                (Panitia SPMB SMANTARNALA Tahun 2027)
             </p>
         </div>
     </div>

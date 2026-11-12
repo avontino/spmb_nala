@@ -110,7 +110,7 @@
                                 </p>
                             </div>
                             <p class="text-gray-600 italic text-center">
-                                (Panitia SPMB SMANTARNALA Tahun 2026)
+                                (Panitia SPMB SMANTARNALA Tahun 2027)
                             </p>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                                 Terima kasih <strong>{{ $namaCasis }}</strong> atas partisipasi Ananda dalam proses SPMB di SMA Negeri Taruna Nala Jawa Timur.
                             </p>
                             <p>
-                                Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda <span class="font-bold text-red-600">tidak lolos</span> dalam penerimaan Tahun Pelajaran 2026/2027.
+                                Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda <span class="font-bold text-red-600">tidak lolos</span> dalam penerimaan Tahun Pelajaran 2027/2028.
                             </p>
                             <p>
                                 Kami mengapresiasi usaha dan dedikasi Ananda selama proses seleksi ini. Jangan berkecil hati, teruslah berusaha dan tingkatkan kemampuan untuk kesempatan di masa depan.
@@ -187,7 +187,7 @@
                                 Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda.
                             </p>
                             <p class="text-gray-600 italic text-center">
-                                (Panitia SPMB SMANTARNALA Tahun 2026)
+                                (Panitia SPMB SMANTARNALA Tahun 2027)
                             </p>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
                                 </p>
                             </div>
                             <p class="text-gray-600 italic text-center">
-                                (Panitia SPMB SMANTARNALA Tahun 2026)
+                                (Panitia SPMB SMANTARNALA Tahun 2027)
                             </p>
                         </div>
                     </div>
@@ -411,7 +411,7 @@
                                             <p>Bapak Ibu Orang Tua / Wali Murid dari <strong>{{ $pendaftaran->dataPribadi->nama_lengkap }}</strong> dengan nomor pendaftaran <strong>{{ $pendaftaran->nomor_pendaftaran }}</strong>, kami mengundang kehadirannya untuk melaksanakan wawancara berkaitan dengan pendaftaran putra/putrinya di SMAN Taruna Nala Jawa Timur pada:</p>
                                             <p class="text-center font-bold text-blue-800 py-2 bg-blue-100 rounded-lg">{{ $pendaftaran->penerimaan->sesi_interview }}</p>
                                             <p>Wawancara hanya diwakili oleh 1 orangtua saja. Setelah sesi wawancara selesai, orangtua bersama casis dapat langsung meninggalkan area Sekolah.</p>
-                                            <p class="mt-2">Terimakasih<br><strong>Panitia SPMB 2026</strong></p>
+                                            <p class="mt-2">Terimakasih<br><strong>Panitia SPMB 2027</strong></p>
                                         </div>
                                     </div>
                                     @endif
@@ -499,7 +499,7 @@
                                 <div>
                                     <h4 class="font-bold text-orange-700 text-base">
                                         WASPADA TERHADAP CALO & PENIPUAN
-                                            SELEKSI SPMB SMAN TARUNA NALA JAWA TIMUR TAHUN AJARAN 2026/2027
+                                            SELEKSI SPMB SMAN TARUNA NALA JAWA TIMUR TAHUN AJARAN 2027/2028
                                     </h4>
                                     <p class="text-sm text-orange-700">
                                         Pengumuman resmi hanya melalui <span class="font-bold">akun SPMB masing-masing pendaftar</span> dan <span class="font-bold">humas sekolah</span>.

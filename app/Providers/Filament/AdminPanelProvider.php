@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('ADMIN SPMB TARUNA NALA')
             ->colors([
                 'primary' => Color::Amber,
             ])

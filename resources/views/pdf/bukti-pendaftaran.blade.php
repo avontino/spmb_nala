@@ -214,13 +214,13 @@
 </head>
 <body>
     {{-- Watermark --}}
-    <div class="watermark">SPMB 2025</div>
+    <div class="watermark">SPMB 2027</div>
 
     {{-- Header --}}
     <div class="header">
         <h1>SMA NEGERI TARUNA NALA JAWA TIMUR</h1>
         <h2>Sistem Penerimaan Murid Baru (SPMB)</h2>
-        <p>Tahun Ajaran 2025/2026</p>
+        <p>Tahun Ajaran 2027/2028</p>
         <p>Jl Raya Tlogowaru No. 66 | Telp: (0341) 2993222 | Email: info@smantarunajatim.sch.id</p>
     </div>
 

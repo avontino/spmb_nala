@@ -20,7 +20,7 @@
                         👋 Selamat Datang, {{ $user->name }}!
                     </h2>
                     <p class="text-gray-600 text-sm">
-                        Sistem Penerimaan Murid Baru (SPMB) 2026/2027
+                        Sistem Penerimaan Murid Baru (SPMB) 2027/2028
                     </p>
                 </div>
                 <div class="text-right">
@@ -46,7 +46,7 @@
                         Pendaftaran Telah Ditutup
                     </h3>
                     <p class="text-sm text-red-50">Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
-                    <p class="text-sm text-red-50">Panitia SPMB Tahun Pelajaran 2026/2027</p>
+                    <p class="text-sm text-red-50">Panitia SPMB Tahun Pelajaran 2027/2028</p>
 
                 </div>
             </div>
@@ -92,7 +92,7 @@
                                         <p>Mohon melakukan pembayaran biaya seleksi tahap 2 melalui Virtual Account bank jatim Ananda dengan nomor <strong>{{ $pendaftaran->penerimaan->nomor_va }}</strong>. </p>
                                         <p>Jangan lupa mempersiapkan diri untuk Seleksi Tahap 2 di SMA Negeri Taruna Nala Jawa Timur pada tanggal 5-10 Januari 2026. </p>
                                         <p>Anda wajib hadir di SMAN Taruna Nala Jawa Timur pada <strong>{{ $pendaftaran->penerimaan->sesi }}</strong>, silahkan membaca panduan pada tautan berikut. </p>
-                                        <p>Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia SPMB SMANTARNALA Tahun 2026)</p>
+                                        <p>Pengumuman ini dapat digunakan sebagai dasar mengajukan izin ke Sekolah asal (Panitia SPMB SMANTARNALA Tahun 2027)</p>
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                                     <p>Bapak Ibu Orang Tua / Wali Murid dari <strong>{{ $pendaftaran->dataPribadi->nama_lengkap ?? $pendaftaran->user->name }}</strong> dengan nomor pendaftaran <strong>{{ $pendaftaran->nomor_pendaftaran }}</strong>, kami mengundang kehadirannya untuk melaksanakan wawancara berkaitan dengan pendaftaran putra/putrinya di SMAN Taruna Nala Jawa Timur pada:</p>
                                     <p class="text-center font-bold text-blue-800 py-3 bg-blue-100 rounded-lg text-base">{{ $pendaftaran->penerimaan->sesi_interview }}</p>
                                     <p>Wawancara hanya diwakili oleh 1 orangtua saja. Setelah sesi wawancara selesai, orangtua bersama casis dapat langsung meninggalkan area Sekolah.</p>
-                                    <p class="mt-2">Terimakasih<br><strong>Panitia SPMB 2026</strong></p>
+                                    <p class="mt-2">Terimakasih<br><strong>Panitia SPMB 2027</strong></p>
                                 </div>
                             </div>
                             @endif
@@ -194,7 +194,7 @@
                                     Terima kasih <strong>{{ $pendaftaran->dataPribadi->nama_lengkap ?? $pendaftaran->user->name }}</strong> atas partisipasi Ananda dalam proses seleksi tahap 1 di SMA Negeri Taruna Nala Jawa Timur. <br>
                                     Setelah melalui proses seleksi yang ketat, dengan berat hati kami sampaikan bahwa Ananda belum berhasil lolos ke tahap berikutnya. <br>
                                     Kami mengapresiasi usaha dan dedikasi Ananda selama proses seleksi ini. Jangan berkecil hati, teruslah berusaha dan tingkatkan kemampuan untuk kesempatan di masa depan. <br>
-                                    Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda. (Panitia SPMB SMANTARNALA Tahun 2026)<br>
+                                    Semoga sukses selalu menyertai langkah Ananda ke depan. Terima kasih telah memilih SMA Negeri Taruna Nala Jawa Timur sebagai salah satu pilihan pendidikan Ananda. (Panitia SPMB SMANTARNALA Tahun 2027)<br>
                                 </p>
                             </div>
                         </div>
@@ -375,7 +375,7 @@
                     Belum Ada Pendaftaran
                 </h3>
                 <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                    Anda belum memiliki pendaftaran aktif. Klik tombol di bawah untuk memulai proses pendaftaran SPMB 2025/2026.
+                    Anda belum memiliki pendaftaran aktif. Klik tombol di bawah untuk memulai proses pendaftaran SPMB 2027/2028.
                 </p>
                 <a href="{{ \App\Filament\Pendaftar\Resources\PendaftaranResource::getUrl('create') }}" 
                    class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">

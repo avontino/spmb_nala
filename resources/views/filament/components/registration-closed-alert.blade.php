@@ -10,7 +10,7 @@
             <div class="mt-2 text-sm text-danger-700">
                 <p>Mohon maaf pendaftaran SPMB SMAN Taruna Nala Jawa Timur saat ini sudah ditutup. Silahkan menunggu hasil seleksi tahap 1.</p>
                 <br>
-                <p>Panitia SPMB Tahun Pelajaran 2026/2027</p>
+                <p>Panitia SPMB Tahun Pelajaran 2027/2028</p>
             </div>
         </div>
     </div>

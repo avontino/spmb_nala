@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pendaftar\Widgets;
 
+use App\Models\AppSetting;
 use Filament\Widgets\Widget;
 use Carbon\Carbon;
 
@@ -13,20 +14,16 @@ class StatusPendaftaranWidget extends Widget
 
     protected static ?int $sort = 1;
 
-    protected static ?string $pollingInterval = '30s';
+    protected static bool $isLazy = false;
+
+    protected static ?string $pollingInterval = null;
 
     /**
      * Cek apakah pendaftaran sudah ditutup
      */
     public function isRegistrationClosed(): bool
     {
-        $closedDate = config('app.register_closed_date');
-
-        if (!$closedDate) {
-            return false;
-        }
-
-        return Carbon::now()->gte(Carbon::parse($closedDate));
+        return AppSetting::isRegistrationClosed();
     }
 
     /**
@@ -34,8 +31,11 @@ class StatusPendaftaranWidget extends Widget
      */
     public function getClosedDate(): string
     {
-        $closedDate = config('app.register_closed_date');
-        return Carbon::parse($closedDate)->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i');
+        $closedDate = AppSetting::getRegisterClosedDate();
+
+        return $closedDate
+            ? $closedDate->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i')
+            : '-';
     }
 
     /**
@@ -43,7 +43,8 @@ class StatusPendaftaranWidget extends Widget
      */
     public function getDaysSinceClosed(): int
     {
-        $closedDate = Carbon::parse(config('app.register_closed_date'));
-        return Carbon::now()->diffInDays($closedDate);
+        $closedDate = AppSetting::getRegisterClosedDate();
+
+        return $closedDate ? Carbon::now()->diffInDays($closedDate) : 0;
     }
 }

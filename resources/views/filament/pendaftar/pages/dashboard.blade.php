@@ -1,8 +1,4 @@
 <x-filament-panels::page>
-    @php
-        $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())->first();
-    @endphp
-
     {{-- Default Dashboard Widgets --}}
     <x-filament-widgets::widgets
         :columns="$this->getColumns()"

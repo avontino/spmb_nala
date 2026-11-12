@@ -11,13 +11,13 @@ class RevisiNotificationWidget extends Widget
 
     protected static ?int $sort = 0; // Tampil paling atas
 
+    protected static bool $isLazy = false;
+
     protected int | string | array $columnSpan = 'full';
 
     public function getPendaftaran()
     {
-        return Pendaftaran::with('latestVerifikasi.verifikator')
-            ->where('user_id', auth()->id())
-            ->first();
+        return Pendaftaran::forUser(auth()->id());
     }
 
     public function isVisible(): bool

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Tambahkan di resources/css/app.css atau di custom theme */
 .nik-error input {
     border-color: rgb(239 68 68) !important;

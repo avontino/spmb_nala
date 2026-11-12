@@ -2,7 +2,7 @@
 
 <x-filament::widget>
     @php
-        $pendaftaran = \App\Models\Pendaftaran::with(['dataPribadi', 'dataSekolahAsal', 'penerimaan', 'penerimaanTahap2'])->where('user_id', auth()->id())->first();
+        $pendaftaran = \App\Models\Pendaftaran::forUser(auth()->id());
         $user = auth()->user();
         $penerimaanTahap2 = $pendaftaran?->penerimaanTahap2;
 

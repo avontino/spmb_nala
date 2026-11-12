@@ -11,6 +11,79 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Pendaftaran extends Model
 {
     protected $table = 'pendaftaran';
+
+    protected ?array $cachedCompletionStatus = null;
+
+    /**
+     * Request-scoped cache for the current user's registration with dashboard relations.
+     *
+     * @var array<int, ?self>
+     */
+    protected static array $userRequestCache = [];
+
+    protected static function booted(): void
+    {
+        $flush = function (self $model): void {
+            if ($model->user_id) {
+                unset(static::$userRequestCache[$model->user_id]);
+            }
+        };
+
+        static::saved($flush);
+        static::deleted($flush);
+    }
+
+    /**
+     * Get counts grouped by status in a single query for dashboard stats widgets.
+     *
+     * @return array<string, int>
+     */
+    public static function getStatusCounts(): array
+    {
+        $rows = static::query()
+            ->selectRaw('status, COUNT(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status')
+            ->all();
+
+        $counts = [
+            'submitted' => (int) ($rows['submitted'] ?? 0),
+            'approved' => (int) ($rows['approved'] ?? 0),
+            'needs_revision' => (int) ($rows['needs_revision'] ?? 0),
+            'rejected' => (int) ($rows['rejected'] ?? 0),
+            'draft' => (int) ($rows['draft'] ?? 0),
+        ];
+
+        $counts['total'] = array_sum(array_map('intval', $rows));
+
+        return $counts;
+    }
+
+    /**
+     * Fetch the authenticated (or given) user's Pendaftaran once per request with dashboard relations.
+     */
+    public static function forUser(?int $userId = null): ?self
+    {
+        $userId ??= auth()->id();
+
+        if (! $userId) {
+            return null;
+        }
+
+        if (array_key_exists($userId, static::$userRequestCache)) {
+            return static::$userRequestCache[$userId];
+        }
+
+        return static::$userRequestCache[$userId] = static::with([
+            'dataPribadi',
+            'dataOrangTua',
+            'dataSekolahAsal',
+            'nilaiRaport',
+            'latestVerifikasi.verifikator',
+            'penerimaan',
+            'penerimaanTahap2',
+        ])->where('user_id', $userId)->first();
+    }
     
     protected $fillable = [
         'user_id',
@@ -206,29 +279,29 @@ public function isDataSekolahAsalComplete(): bool
      */
 public function isNilaiRaportComplete(): bool
 {
-    $nilaiCount = $this->nilaiRaport()->count();
-    
+    $nilaiBySemester = $this->nilaiRaport->keyBy('semester');
+
     // ✅ MINIMAL 4 SEMESTER (bukan 5)
-    if ($nilaiCount < 4) {
+    if ($nilaiBySemester->count() < 4) {
         return false;
     }
-    
+
     // Check if all required semesters have data
     for ($semester = 1; $semester <= 4; $semester++) {  // ✅ HANYA 1-4
-        $nilai = $this->nilaiRaport()->where('semester', $semester)->first();
-        
+        $nilai = $nilaiBySemester->get($semester);
+
         if (!$nilai) {
             return false;
         }
-        
+
         // Check if essential fields are filled
-        if (empty($nilai->nilai_matematika) || 
-            empty($nilai->nilai_bahasa_indonesia) || 
+        if (empty($nilai->nilai_matematika) ||
+            empty($nilai->nilai_bahasa_indonesia) ||
             empty($nilai->nilai_bahasa_inggris)) {
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -249,6 +322,14 @@ public function isNilaiRaportComplete(): bool
     public function markPrestasiOrganisasiCompleted(): void
     {
         $this->update(['prestasi_organisasi_completed' => true]);
+        $this->cachedCompletionStatus = null;
+    }
+
+    public function refresh()
+    {
+        $this->cachedCompletionStatus = null;
+
+        return parent::refresh();
     }
 
     /**
@@ -256,19 +337,19 @@ public function isNilaiRaportComplete(): bool
      */
     public function isAllDataComplete(): bool
     {
-        return $this->isDataPribadiComplete() &&
-               $this->isDataOrangTuaComplete() &&
-               $this->isDataSekolahAsalComplete() &&
-               $this->isNilaiRaportComplete() &&
-               $this->isPrestasiOrganisasiComplete();
+        return ! in_array(false, $this->getCompletionStatus(), true);
     }
 
     /**
-     * Get completion status for each section
+     * Get completion status for each section (memoized per model instance).
      */
-    public function getCompletionStatus(): array
+    public function getCompletionStatus(bool $fresh = false): array
     {
-        return [
+        if ($fresh) {
+            $this->cachedCompletionStatus = null;
+        }
+
+        return $this->cachedCompletionStatus ??= [
             'data_pribadi' => $this->isDataPribadiComplete(),
             'data_orang_tua' => $this->isDataOrangTuaComplete(),
             'sekolah_asal' => $this->isDataSekolahAsalComplete(),
@@ -280,38 +361,13 @@ public function isNilaiRaportComplete(): bool
     /**
      * Get completion percentage
      */
-public function getCompletionPercentage(): int
-{
-    $totalSections = 5;
-    $completedSections = 0;
-    
-    // 1. Data Pribadi
-    if ($this->isDataPribadiComplete()) {
-        $completedSections++;
+    public function getCompletionPercentage(): int
+    {
+        $status = $this->getCompletionStatus();
+        $completedSections = count(array_filter($status));
+
+        return (int) round(($completedSections / count($status)) * 100);
     }
-    
-    // 2. Data Orang Tua
-    if ($this->isDataOrangTuaComplete()) {
-        $completedSections++;
-    }
-    
-    // 3. Data Sekolah Asal
-    if ($this->isDataSekolahAsalComplete()) {
-        $completedSections++;
-    }
-    
-    // 4. Nilai Raport
-    if ($this->isNilaiRaportComplete()) {
-        $completedSections++;
-    }
-    
-    // 5. Prestasi & Organisasi
-    if ($this->prestasi_organisasi_completed) {
-        $completedSections++;
-    }
-    
-    return (int) round(($completedSections / $totalSections) * 100);
-}
 
     /**
      * Check if can submit registration

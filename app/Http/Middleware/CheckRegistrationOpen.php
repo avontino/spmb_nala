@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AppSetting;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Carbon\Carbon;
 use Filament\Notifications\Notification;
 
 class CheckRegistrationOpen
@@ -17,27 +17,13 @@ class CheckRegistrationOpen
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Cek apakah ada tanggal penutupan pendaftaran
-        $closedDate = config('app.register_closed_date');
-
-        // Jika tidak ada tanggal penutupan, izinkan akses
-        if (!$closedDate) {
-            return $next($request);
-        }
-
-        // Cek apakah sudah melewati tanggal penutupan
-        $now = Carbon::now();
-        $registerClosedDate = Carbon::parse($closedDate);
-
-        if ($now->gte($registerClosedDate)) {
-            // Tampilkan notifikasi
+        if (AppSetting::isRegistrationClosed()) {
             Notification::make()
                 ->title('Pendaftaran Telah Ditutup')
-                ->body('Pendaftaran telah ditutup sejak ' . $registerClosedDate->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i') . '. Anda hanya dapat mengakses dashboard.')
+                ->body(AppSetting::getClosedMessage())
                 ->danger()
                 ->send();
 
-            // Redirect ke dashboard
             return redirect()->route('filament.pendaftar.pages.dashboard');
         }
 

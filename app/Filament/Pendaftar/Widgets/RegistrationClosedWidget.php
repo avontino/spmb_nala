@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pendaftar\Widgets;
 
+use App\Models\AppSetting;
 use Filament\Widgets\Widget;
 use Carbon\Carbon;
 
@@ -12,6 +13,8 @@ class RegistrationClosedWidget extends Widget
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 2; // Tampil setelah widget selamat datang
+
+    protected static bool $isLazy = false;
 
     /**
      * Cek apakah widget harus ditampilkan
@@ -28,8 +31,9 @@ class RegistrationClosedWidget extends Widget
      */
     public function getClosedDate(): string
     {
-        $closedDate = config('app.register_closed_date');
-        return Carbon::parse($closedDate)->format('d F Y');
+        $closedDate = AppSetting::getRegisterClosedDate();
+
+        return $closedDate ? $closedDate->format('d F Y') : '-';
     }
 
     /**
@@ -37,7 +41,8 @@ class RegistrationClosedWidget extends Widget
      */
     public function getDaysSinceClosed(): int
     {
-        $closedDate = Carbon::parse(config('app.register_closed_date'));
-        return Carbon::now()->diffInDays($closedDate);
+        $closedDate = AppSetting::getRegisterClosedDate();
+
+        return $closedDate ? Carbon::now()->diffInDays($closedDate) : 0;
     }
 }

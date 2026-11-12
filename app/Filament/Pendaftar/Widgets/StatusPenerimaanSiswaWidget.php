@@ -14,13 +14,15 @@ class StatusPenerimaanSiswaWidget extends Widget
 
     protected static ?int $sort = 0; // Tampil paling atas
 
-    protected static ?string $pollingInterval = '30s';
+    protected static bool $isLazy = false;
+
+    protected static ?string $pollingInterval = null;
 
     public ?Pendaftaran $pendaftaran = null;
 
     public function mount(): void
     {
-        $this->pendaftaran = Pendaftaran::where('user_id', Auth::id())->first();
+        $this->pendaftaran = Pendaftaran::forUser(Auth::id());
     }
 
     /**
@@ -28,7 +30,7 @@ class StatusPenerimaanSiswaWidget extends Widget
      */
     public static function canView(): bool
     {
-        $pendaftaran = Pendaftaran::where('user_id', Auth::id())->first();
+        $pendaftaran = Pendaftaran::forUser(Auth::id());
 
         // Hanya tampilkan jika status approved atau rejected
         return $pendaftaran && in_array($pendaftaran->status, ['approved', 'rejected']);

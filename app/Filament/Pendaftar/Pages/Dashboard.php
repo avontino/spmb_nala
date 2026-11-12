@@ -6,6 +6,7 @@ use Filament\Pages\Dashboard as BaseDashboard;
 use App\Filament\Pendaftar\Widgets\RevisiNotificationWidget;
 use App\Filament\Pendaftar\Widgets\StatusPendaftaranWidget;
 use App\Filament\Pendaftar\Widgets\InformasiPentingWidget;
+use App\Filament\Pendaftar\Widgets\PengumumanDashboardWidget;
 use App\Filament\Pendaftar\Widgets\RegistrationClosedWidget;
 use App\Models\Pendaftaran;
 use Filament\Notifications\Notification;
@@ -22,6 +23,7 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            PengumumanDashboardWidget::class,
             RegistrationClosedWidget::class, // Widget penutupan pendaftaran
             RevisiNotificationWidget::class,
             StatusPendaftaranWidget::class,

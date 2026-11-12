@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pendaftar\Pages\Auth;
 
+use App\Models\AppSetting;
 use App\Models\User;
 use App\Models\Pendaftaran;
 use Filament\Forms\Components\Component;
@@ -25,24 +26,18 @@ class Register extends BaseRegister
 
     protected function isRegistrationClosed(): bool
     {
-        $closedDate = config('app.register_closed_date');
-
-        if (!$closedDate) {
-            return false;
-        }
-
-        return Carbon::now()->greaterThanOrEqualTo(Carbon::parse($closedDate));
+        return AppSetting::isRegistrationClosed();
     }
 
     protected function getClosedDateFormatted(): string
     {
-        $closedDate = config('app.register_closed_date');
+        $closedDate = AppSetting::getRegisterClosedDate();
 
-        if (!$closedDate) {
-            return '';
+        if (! $closedDate) {
+            return 'yang telah ditentukan';
         }
 
-        return Carbon::parse($closedDate)->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i');
+        return $closedDate->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i');
     }
 
     protected function getRegistrationClosedAlert(): Component

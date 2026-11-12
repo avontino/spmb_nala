@@ -24,6 +24,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Pendaftar\Pages\Auth\Login;
 use App\Http\Middleware\CheckRegistrationOpen;
 use Carbon\Carbon;
+use Filament\Enums\ThemeMode;
 
 class PendaftarPanelProvider extends PanelProvider
 {
@@ -41,6 +42,9 @@ class PendaftarPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
+            ->defaultThemeMode(ThemeMode::Light)
+            ->sidebarWidth('21.5rem')
+            ->spa()
             ->viteTheme('resources/css/filament/pendaftar/theme.css')
             ->discoverResources(in: app_path('Filament/Pendaftar/Resources'), for: 'App\\Filament\\Pendaftar\\Resources')
             ->discoverPages(in: app_path('Filament/Pendaftar/Pages'), for: 'App\\Filament\\Pendaftar\\Pages')
@@ -200,13 +204,7 @@ class PendaftarPanelProvider extends PanelProvider
      */
     protected function isRegistrationClosed(): bool
     {
-        $closedDate = config('app.register_closed_date');
-
-        if (!$closedDate) {
-            return false;
-        }
-
-        return Carbon::now()->gte(Carbon::parse($closedDate));
+        return \App\Models\AppSetting::isRegistrationClosed();
     }
 
     /**
@@ -214,13 +212,13 @@ class PendaftarPanelProvider extends PanelProvider
      */
     protected function getNavigationGroups(): array
     {
-        // Ambil data pendaftaran user yang sedang login
-        $pendaftaran = \App\Models\Pendaftaran::where('user_id', auth()->id())->first();
+        // Cek apakah pendaftaran sudah ditutup terlebih dahulu sebelum query data relasi
+        $isClosed = $this->isRegistrationClosed();
+
+        // Gunakan loader ter-memoize per request agar tidak query berulang di widget dashboard
+        $pendaftaran = \App\Models\Pendaftaran::forUser(auth()->id());
 
         $groups = [];
-
-        // Cek apakah pendaftaran sudah ditutup
-        $isClosed = $this->isRegistrationClosed();
 
         // GROUP 1: Menu Utama
         $menuItems = [
@@ -232,10 +230,15 @@ class PendaftarPanelProvider extends PanelProvider
 
         // Hanya tampilkan menu "Daftar Pendaftaran" jika pendaftaran masih dibuka
         if (!$isClosed) {
+            $completionPercentage = $pendaftaran ? $pendaftaran->getCompletionPercentage() : 0;
+
             $menuItems[] = NavigationItem::make('Daftar Pendaftaran')
                 ->icon('heroicon-o-list-bullet')
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.index'))
-                ->badge($this->getPendaftaranBadge($pendaftaran))
+                ->badge(
+                    $this->getPendaftaranBadge($pendaftaran, $completionPercentage),
+                    $this->getPendaftaranBadgeColor($pendaftaran)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('index'));
         }
 
@@ -245,6 +248,8 @@ class PendaftarPanelProvider extends PanelProvider
         // GROUP 2: Form Pendaftaran (hanya tampil jika pendaftaran masih dibuka dan ada data pendaftaran)
         if (!$isClosed && $pendaftaran) {
     $completionStatus = $pendaftaran->getCompletionStatus();
+    $canSubmit = $pendaftaran->canSubmit();
+    $canPrintProof = $pendaftaran->canPrintProof();
 
     // ✅ CEK APAKAH ADA REVISI YANG DIPERLUKAN
     $needsRevision = $pendaftaran->status === 'needs_revision';
@@ -261,69 +266,79 @@ class PendaftarPanelProvider extends PanelProvider
         ];
     }
 
-    $groups[] = NavigationGroup::make('📝 Isi Form Pendaftaran')
+    $groups[] = NavigationGroup::make('Isi Form Pendaftaran')
         ->items([
             NavigationItem::make('1. Data Pribadi')
                 ->icon($this->getMenuIcon('data_pribadi', $completionStatus, $revisionFields))
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.edit-data-pribadi'))
-                ->badge($this->getMenuBadge('data_pribadi', $completionStatus, $revisionFields))
-                // ->badgeColor($this->getMenuBadgeColor('data_pribadi', $completionStatus, $revisionFields))
+                ->badge(
+                    $this->getMenuBadge('data_pribadi', $completionStatus, $revisionFields),
+                    $this->getMenuBadgeColor('data_pribadi', $completionStatus, $revisionFields)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('edit-data-pribadi', ['record' => $pendaftaran])),
                 
             NavigationItem::make('2. Data Orang Tua')
                 ->icon($this->getMenuIcon('data_orang_tua', $completionStatus, $revisionFields))
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.edit-data-orang-tua'))
-                ->badge($this->getMenuBadge('data_orang_tua', $completionStatus, $revisionFields))
-                // ->badgeColor($this->getMenuBadgeColor('data_orang_tua', $completionStatus, $revisionFields))
+                ->badge(
+                    $this->getMenuBadge('data_orang_tua', $completionStatus, $revisionFields),
+                    $this->getMenuBadgeColor('data_orang_tua', $completionStatus, $revisionFields)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('edit-data-orang-tua', ['record' => $pendaftaran])),
                 
             NavigationItem::make('3. Sekolah Asal')
                 ->icon($this->getMenuIcon('sekolah_asal', $completionStatus, $revisionFields))
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.edit-sekolah-asal'))
-                ->badge($this->getMenuBadge('sekolah_asal', $completionStatus, $revisionFields))
-                // ->badgeColor($this->getMenuBadgeColor('sekolah_asal', $completionStatus, $revisionFields))
+                ->badge(
+                    $this->getMenuBadge('sekolah_asal', $completionStatus, $revisionFields),
+                    $this->getMenuBadgeColor('sekolah_asal', $completionStatus, $revisionFields)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('edit-sekolah-asal', ['record' => $pendaftaran])),
                 
             NavigationItem::make('4. Nilai Raport')
                 ->icon($this->getMenuIcon('nilai_raport', $completionStatus, $revisionFields))
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.edit-nilai-raport'))
-                ->badge($this->getMenuBadge('nilai_raport', $completionStatus, $revisionFields))
-                // ->badgeColor($this->getMenuBadgeColor('nilai_raport', $completionStatus, $revisionFields))
+                ->badge(
+                    $this->getMenuBadge('nilai_raport', $completionStatus, $revisionFields),
+                    $this->getMenuBadgeColor('nilai_raport', $completionStatus, $revisionFields)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('edit-nilai-raport', ['record' => $pendaftaran])),
                 
             NavigationItem::make('5. Prestasi & Organisasi')
                 ->icon($this->getMenuIcon('prestasi_organisasi', $completionStatus, $revisionFields))
                 ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.edit-prestasi'))
-                ->badge($this->getMenuBadge('prestasi_organisasi', $completionStatus, $revisionFields))
-                // ->badgeColor($this->getMenuBadgeColor('prestasi_organisasi', $completionStatus, $revisionFields))
+                ->badge(
+                    $this->getMenuBadge('prestasi_organisasi', $completionStatus, $revisionFields),
+                    $this->getMenuBadgeColor('prestasi_organisasi', $completionStatus, $revisionFields)
+                )
                 ->url(fn () => PendaftaranResource::getUrl('edit-prestasi', ['record' => $pendaftaran])),
         ])
         ->collapsible()
         ->collapsed(false);
                 
             // GROUP 3: Aksi Pendaftaran
-            $groups[] = NavigationGroup::make('🚀 Aksi Pendaftaran')
+            $groups[] = NavigationGroup::make('Aksi Pendaftaran')
                 ->items([
                     // ✅ MENU SELESAIKAN PENDAFTARAN - Aktif hanya jika semua data lengkap
                     NavigationItem::make('Selesaikan Pendaftaran')
-                        ->icon($pendaftaran->canSubmit() ? 'heroicon-o-paper-airplane' : 'heroicon-o-lock-closed')
+                        ->icon($canSubmit ? 'heroicon-o-paper-airplane' : 'heroicon-o-lock-closed')
                         ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.submit'))
-                        ->badge($pendaftaran->canSubmit() ? '🟢 SIAP SUBMIT' : '🔒 ' . $pendaftaran->getCompletionPercentage() . '%')
-                        ->url(fn () => $pendaftaran->canSubmit() 
+                        ->badge($canSubmit ? 'Siap' : $completionPercentage . '%', $canSubmit ? 'success' : 'gray')
+                        ->url(fn () => $canSubmit
                             ? PendaftaranResource::getUrl('submit', ['record' => $pendaftaran])
                             : '#')
                         ->visible(fn () => $pendaftaran->status === 'draft')
-                        ->sort($pendaftaran->canSubmit() ? 1 : 99),
+                        ->sort($canSubmit ? 1 : 99),
                         
                     // ✅ MENU CETAK BUKTI - Aktif hanya setelah submit
                     NavigationItem::make('Cetak Bukti Pendaftaran')
-                        ->icon($pendaftaran->canPrintProof() ? 'heroicon-o-printer' : 'heroicon-o-lock-closed')
+                        ->icon($canPrintProof ? 'heroicon-o-printer' : 'heroicon-o-lock-closed')
                         ->isActiveWhen(fn () => request()->routeIs('filament.pendaftar.resources.pendaftarans.cetak-bukti'))
-                        ->badge($pendaftaran->canPrintProof() ? '🟢 TERSEDIA' : '🔒 BELUM SUBMIT')
-                        ->url(fn () => $pendaftaran->canPrintProof() 
+                        ->badge($canPrintProof ? 'Tersedia' : 'Terkunci', $canPrintProof ? 'success' : 'gray')
+                        ->url(fn () => $canPrintProof
                             ? PendaftaranResource::getUrl('cetak-bukti', ['record' => $pendaftaran])
                             : '#')
-                        ->sort($pendaftaran->canPrintProof() ? 2 : 100),
+                        ->sort($canPrintProof ? 2 : 100),
                 ])
                 ->collapsible()
                 ->collapsed(false);
@@ -335,19 +350,33 @@ class PendaftarPanelProvider extends PanelProvider
     /**
      * Helper: Get badge text untuk menu Daftar Pendaftaran
      */
-    protected function getPendaftaranBadge($pendaftaran): ?string
+    protected function getPendaftaranBadge($pendaftaran, ?int $completionPercentage = null): ?string
     {
         if (!$pendaftaran) {
             return null;
         }
         
         return match($pendaftaran->status) {
-            'needs_revision' => '🔴 Perlu Perbaikan',
-            'draft' => '⚠️ ' . $pendaftaran->getCompletionPercentage() . '% Lengkap',
-            'submitted' => '🟡 Menunggu Verifikasi',
-            'approved' => '✅ Diterima',
-            'rejected' => '❌ Ditolak',
+            'needs_revision' => 'Revisi',
+            'draft' => ($completionPercentage ?? $pendaftaran->getCompletionPercentage()) . '%',
+            'submitted' => 'Menunggu',
+            'approved' => 'Diterima',
+            'rejected' => 'Ditolak',
             default => null,
+        };
+    }
+
+    protected function getPendaftaranBadgeColor($pendaftaran): string|array|null
+    {
+        if (!$pendaftaran) {
+            return null;
+        }
+
+        return match($pendaftaran->status) {
+            'needs_revision', 'rejected' => 'danger',
+            'draft', 'submitted' => 'warning',
+            'approved' => 'success',
+            default => 'gray',
         };
     }
 
@@ -384,20 +413,32 @@ protected function getMenuBadge(string $field, array $completionStatus, array $r
 {
     // Jika perlu revisi - PRIORITAS TERTINGGI
     if (isset($revisionFields[$field]) && $revisionFields[$field]) {
-        return '🔴 Perlu Diperbaiki';
+        return 'Revisi';
     }
     
     // Jika lengkap
     if ($completionStatus[$field] ?? false) {
-        return '✅ Lengkap';
+        return 'Lengkap';
     }
     
     // Belum lengkap
-    return '⚠️ Belum Lengkap';
+    return 'Belum';
 }
 
 /**
  * Helper: Get badge color untuk menu berdasarkan status
  */
+protected function getMenuBadgeColor(string $field, array $completionStatus, array $revisionFields): string
+{
+    if (isset($revisionFields[$field]) && $revisionFields[$field]) {
+        return 'danger';
+    }
+
+    if ($completionStatus[$field] ?? false) {
+        return 'success';
+    }
+
+    return 'warning';
+}
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pendaftar\Resources\PendaftaranResource\Pages\Concerns;
 
+use App\Models\AppSetting;
 use Filament\Notifications\Notification;
 use Carbon\Carbon;
 
@@ -12,13 +13,7 @@ trait PreventEditWhenSubmitted
      */
     protected function isRegistrationClosed(): bool
     {
-        $closedDate = config('app.register_closed_date');
-
-        if (!$closedDate) {
-            return false;
-        }
-
-        return Carbon::now()->gte(Carbon::parse($closedDate));
+        return AppSetting::isRegistrationClosed();
     }
     /**
      * ⚠️ IMPORTANT: Property $verificationField HARUS didefinisikan di setiap page class
@@ -144,11 +139,9 @@ trait PreventEditWhenSubmitted
 
         // Cek apakah pendaftaran sudah ditutup (setelah record ter-set)
         if ($this->isRegistrationClosed()) {
-            $closedDate = Carbon::parse(config('app.register_closed_date'));
-
             Notification::make()
                 ->title('Pendaftaran Telah Ditutup')
-                ->body('Pendaftaran telah ditutup sejak ' . $closedDate->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i') . '. Anda hanya dapat mengakses dashboard.')
+                ->body(AppSetting::getClosedMessage())
                 ->danger()
                 ->persistent()
                 ->send();

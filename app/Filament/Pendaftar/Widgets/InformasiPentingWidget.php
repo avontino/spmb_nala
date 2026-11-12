@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pendaftar\Widgets;
 
+use App\Models\AppSetting;
 use Filament\Widgets\Widget;
-use Carbon\Carbon;
 
 class InformasiPentingWidget extends Widget
 {
@@ -13,18 +13,26 @@ class InformasiPentingWidget extends Widget
 
     protected static ?int $sort = 2;
 
+    protected static bool $isLazy = false;
+
     /**
-     * Hide widget jika pendaftaran sudah ditutup
+     * Tampilkan widget jika pendaftaran buka atau admin mengizinkan tampil saat tutup.
      */
     public static function canView(): bool
     {
-        $closedDate = config('app.register_closed_date');
-
-        if (!$closedDate) {
-            return true; // Tampilkan jika tidak ada tanggal penutupan
+        if (! AppSetting::isRegistrationClosed()) {
+            return true;
         }
 
-        // Hide jika sudah ditutup
-        return Carbon::now()->lt(Carbon::parse($closedDate));
+        $content = AppSetting::getPendaftarDashboardContent();
+
+        return ! empty($content['show_info_when_closed']);
+    }
+
+    protected function getViewData(): array
+    {
+        return [
+            'content' => AppSetting::getPendaftarDashboardContent(),
+        ];
     }
 }

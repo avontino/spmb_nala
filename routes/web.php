@@ -3,7 +3,18 @@
 // Add this route to your routes/web.php file
 
 use App\Http\Controllers\CetakBuktiController;
+use App\Models\AppSetting;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    $closedDate = AppSetting::getRegisterClosedDate();
+
+    return view('landing', [
+        'content' => AppSetting::getLandingContent(),
+        'isRegistrationClosed' => AppSetting::isRegistrationClosed(),
+        'closedDateFormatted' => $closedDate?->locale('id')->translatedFormat('d F Y \p\u\k\u\l H:i'),
+    ]);
+})->name('landing');
 
 // Route for downloading exports
 Route::middleware(['auth'])->group(function () {

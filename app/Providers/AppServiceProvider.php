@@ -25,10 +25,10 @@ class AppServiceProvider extends ServiceProvider
         // force use app_url
         \URL::forceRootUrl(config('app.url'));
 
-        // force livewire to add prefix to routes on production
-        if (config('app.env') === 'production') {
-            $prefix = env('LIVEWIRE_PATH_PREFIX', '2027');
-            $prefix = $prefix ? trim($prefix, '/') . '/' : '';
+        // Custom livewire route prefix only if explicitly set (e.g. when hosted in subfolder)
+        $prefix = env('LIVEWIRE_PATH_PREFIX');
+        if (!empty($prefix)) {
+            $prefix = trim($prefix, '/') . '/';
 
             Livewire::setUpdateRoute(function ($handle) use ($prefix) {
                 return \Route::post("{$prefix}livewire/update", $handle)

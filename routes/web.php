@@ -182,3 +182,11 @@ Route::middleware(['auth'])->group(function () {
         ]);
     })->name('download-hasil-akhir-seleksi-tahap-2');
 });
+
+// Fallback named route for Laravel password reset
+Route::get('/password-reset/{token}', function ($token) {
+    return redirect()->route('filament.pendaftar.auth.password-reset.reset', [
+        'token' => $token,
+        'email' => request('email'),
+    ]);
+})->name('password.reset');

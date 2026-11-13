@@ -809,7 +809,7 @@ protected function afterSave(): void
             ->body('Terjadi kesalahan: ' . $e->getMessage())
             ->send();
             
-        throw $e;
+        // Catat error tanpa melempar 500 server error
     }
 }
 

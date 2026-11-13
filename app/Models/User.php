@@ -49,6 +49,26 @@ class User extends Authenticatable implements FilamentUser, CanResetPassword
         return $this->hasOne(Pendaftaran::class);
     }
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $panel = filament()->getCurrentPanel();
+        if (!$panel || !$panel->hasPasswordReset()) {
+            $panel = filament()->getPanel('pendaftar');
+        }
+
+        $notification = new \Filament\Notifications\Auth\ResetPassword($token);
+        $notification->url = $panel->getResetPasswordUrl($token, $this);
+
+        try {
+            $this->notify($notification);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send password reset email: ' . $e->getMessage(), [
+                'email' => $this->email,
+                'reset_url' => $notification->url,
+            ]);
+        }
+    }
+
     public function isVerifikator(): bool
     {
         return $this->role === 'verifikator';

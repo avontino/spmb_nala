@@ -354,7 +354,7 @@
             <div class="footer-left">
                 <p style="margin: 0; font-size: 8.5pt; color: #6b7280;">
                     Dicetak pada: {{ $tanggal_cetak }}<br>
-                    Dokumen ini digenerate otomatis oleh sistem PPDB Online
+                    Dokumen ini digenerate otomatis oleh sistem SPMB Online
                 </p>
             </div>
         </div>

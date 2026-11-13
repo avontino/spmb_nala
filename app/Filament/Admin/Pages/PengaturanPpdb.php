@@ -19,9 +19,9 @@ class PengaturanPpdb extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationLabel = 'Pengaturan PPDB';
+    protected static ?string $navigationLabel = 'Pengaturan SPMB';
 
-    protected static ?string $title = 'Pengaturan Jadwal PPDB';
+    protected static ?string $title = 'Pengaturan Jadwal SPMB';
 
     protected static ?int $navigationSort = 99;
 
@@ -90,7 +90,7 @@ class PengaturanPpdb extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('Pengaturan PPDB berhasil disimpan')
+            ->title('Pengaturan SPMB berhasil disimpan')
             ->success()
             ->send();
     }

@@ -158,7 +158,7 @@ class AppSetting extends Model
             'school_name' => 'SMAN Taruna Nala Jawa Timur',
             'site_subtitle' => 'Sistem Penerimaan Murid Baru (SPMB)',
             'academic_year' => 'Tahun Ajaran 2027/2028',
-            'hero_badge' => 'Penerimaan Peserta Didik Baru',
+            'hero_badge' => 'Penerimaan Murid Baru (SPMB)',
             'hero_title' => 'Wujudkan Masa Depan Pemimpin Berkarakter di SMAN Taruna Nala',
             'hero_description' => 'Daftar secara online, lengkapi data diri, nilai raport, dan dokumen pendukung, lalu pantau hasil verifikasi serta pengumuman seleksi langsung dari portal pendaftar.',
             'primary_button_text' => 'Daftar Sekarang',

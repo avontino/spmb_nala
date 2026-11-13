@@ -42,12 +42,12 @@ class Login extends BaseLogin
 
     public function getHeading(): string
     {
-        return 'TARUNA NALA MALANG';
+        return 'SMAN Taruna Nala Jawa Timur';
     }
 
     public function getTitle(): string
     {
-        return 'Login - SPMB TARUNA NALA MALANG';
+        return 'Login - SPMB SMAN Taruna Nala Jawa Timur';
     }
 
     public function hasPasswordResetLink(): bool

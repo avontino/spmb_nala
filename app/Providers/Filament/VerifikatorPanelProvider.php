@@ -28,7 +28,7 @@ class VerifikatorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Green,
             ])
-            ->brandName('VERIFIKATOR SPMB TARUNA NALA')
+            ->brandName('VERIFIKATOR SPMB SMAN TARUNA NALA JAWA TIMUR')
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->discoverResources(in: app_path('Filament/Verifikator/Resources'), for: 'App\\Filament\\Verifikator\\Resources')

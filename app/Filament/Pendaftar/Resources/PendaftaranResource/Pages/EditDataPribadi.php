@@ -529,7 +529,6 @@ protected function afterSave(): void
             
         // Catat error tanpa melempar 500 server error
     }
-    }
 }
 
 protected function getHeaderActions(): array

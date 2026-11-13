@@ -11,8 +11,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'nik' => '1234567890123456',
-            'nisn' => '1234567890',
+            'nik' => null,
+            'nisn' => null,
             'name' => 'Admin PPDB',
             'email' => 'admin@ppdb.test',
             'password' => Hash::make('password'),
@@ -21,8 +21,8 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'nik' => '1234567890123457',
-            'nisn' => '1234567891',
+            'nik' => null,
+            'nisn' => null,
             'name' => 'Verifikator PPDB',
             'email' => 'verifikator@ppdb.test',
             'password' => Hash::make('password'),

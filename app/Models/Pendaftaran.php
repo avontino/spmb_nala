@@ -131,9 +131,9 @@ class Pendaftaran extends Model
         return $this->hasMany(Prestasi::class)->orderBy('urutan');
     }
 
-    public function organisasi(): HasOne
+    public function organisasi(): HasMany
     {
-        return $this->hasOne(Organisasi::class);
+        return $this->hasMany(Organisasi::class);
     }
 
     public function dokumenPendukung(): HasOne

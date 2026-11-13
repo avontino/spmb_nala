@@ -8,12 +8,14 @@ use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\DB;
@@ -115,9 +117,26 @@ class EditPrestasiOrganisasi extends EditRecord
                     ])
                     ->visible(fn () => $this->isFormReadonly() && !$this->needsRevision()),
 
+                // OPSI STATUS KEPEMILIKAN (Page 6)
+                Section::make('📋 Status Prestasi & Organisasi')
+                    ->description('Tentukan apakah Anda memiliki prestasi atau pengalaman organisasi')
+                    ->schema([
+                        Radio::make('status_kepemilikan')
+                            ->label('Apakah Anda memiliki prestasi dan/atau pengalaman organisasi?')
+                            ->options([
+                                'tidak_punya' => 'Tidak Punya Prestasi dan Organisasi',
+                                'punya' => 'Punya Prestasi / Organisasi',
+                            ])
+                            ->default('tidak_punya')
+                            ->live()
+                            ->required()
+                            ->helperText('Jika memilih "Tidak Punya", menu isian prestasi & organisasi tidak akan dimunculkan dan Anda cukup menekan tombol "Simpan & Lanjutkan" di bawah.'),
+                    ]),
+
                 // SECTION PRESTASI
                 Section::make('🏆 Prestasi yang Diraih')
                     ->description('Pilih maksimal 3 prestasi terbaik. Tingkat minimal Kota/Kabupaten.')
+                    ->visible(fn (Get $get) => $get('status_kepemilikan') === 'punya')
                     ->schema([
                         Placeholder::make('prestasi_info')
                             ->label('')
@@ -178,13 +197,12 @@ class EditPrestasiOrganisasi extends EditRecord
                             ->reorderable(false)
                             ->addActionLabel('+ Tambah Prestasi')
                             ->itemLabel(fn (array $state): ?string => $state['nama_prestasi'] ?? 'Prestasi Baru'),
-
-                            
                     ]),
 
-                // SECTION ORGANISASI
+                // SECTION ORGANISASI (Page 6 & Page 8)
                 Section::make('🏫 Pengalaman Organisasi')
                     ->description('Organisasi internal sekolah asal saja (OSIS, Pramuka, PMR, dll). Bukan organisasi di luar sekolah.')
+                    ->visible(fn (Get $get) => $get('status_kepemilikan') === 'punya')
                     ->schema([
                         Placeholder::make('organisasi_info')
                             ->label('')
@@ -197,100 +215,124 @@ class EditPrestasiOrganisasi extends EditRecord
                                 </div>
                             ')),
 
-                        Grid::make(2)
+                        Repeater::make('organisasi')
+                            ->relationship('organisasi')
                             ->schema([
-                                TextInput::make('nama_organisasi')
-                                    ->label('Nama Organisasi Internal Sekolah')
-                                    ->maxLength(255)
-                                    ->placeholder('Contoh: OSIS, Pramuka, PMR, Rohis, Paskibra')
-                                    ->helperText('Organisasi di dalam sekolah asal'),
-                                    
-                                Select::make('jabatan')
-                                    ->label('Jabatan/Posisi (Pengurus)')
-                                    ->options([
-                                        'Ketua' => 'Ketua',
-                                        'Wakil Ketua' => 'Wakil Ketua',
-                                        'Sekretaris' => 'Sekretaris',
-                                        'Bendahara' => 'Bendahara',
-                                        'Koordinator Bidang' => 'Koordinator Bidang',
-                                    ])
-                                    ->native(false)
-                                    ->placeholder('Pilih jabatan')
-                                    ->helperText('Harus sebagai pengurus, bukan anggota biasa'),
-                            ]),
-                            
-                        FileUpload::make('file_bukti_organisasi')
-                            ->label('Bukti Organisasi (SK Pengurus/Sertifikat)')
-                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
-                            ->maxSize(2048)
-                            ->disk('public')
-                            ->directory('bukti-organisasi')
-                            ->visibility('public')
-                            ->openable()
-                            ->downloadable()
-                            ->previewable(false)
-                            ->helperText('Upload SK pengurus atau sertifikat keaktifan (PDF/JPG/PNG, maksimal 2MB)')
-                            ->columnSpanFull(),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('nama_organisasi')
+                                            ->label('Nama Organisasi Internal Sekolah')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->placeholder('Contoh: OSIS, Pramuka, PMR, Rohis, Paskibra')
+                                            ->helperText('Organisasi di dalam sekolah asal'),
+                                            
+                                        Select::make('jabatan')
+                                            ->label('Jabatan/Posisi (Pengurus)')
+                                            ->required()
+                                            ->options([
+                                                'Ketua' => 'Ketua',
+                                                'Wakil Ketua' => 'Wakil Ketua',
+                                                'Sekretaris' => 'Sekretaris',
+                                                'Bendahara' => 'Bendahara',
+                                                'Koordinator Bidang' => 'Koordinator Bidang',
+                                            ])
+                                            ->native(false)
+                                            ->placeholder('Pilih jabatan')
+                                            ->helperText('Harus sebagai pengurus, bukan anggota biasa'),
+                                    ]),
+
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('periode_jabatan')
+                                            ->label('Periode Jabatan')
+                                            ->maxLength(100)
+                                            ->placeholder('Contoh: 2023 - 2024')
+                                            ->helperText('Masa periode kepengurusan'),
+
+                                        FileUpload::make('file_bukti_organisasi')
+                                            ->label('Bukti Organisasi (SK Pengurus/Sertifikat)')
+                                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
+                                            ->maxSize(2048)
+                                            ->disk('public')
+                                            ->directory('bukti-organisasi')
+                                            ->visibility('public')
+                                            ->openable()
+                                            ->downloadable()
+                                            ->previewable(false)
+                                            ->helperText('Upload SK pengurus atau sertifikat keaktifan (PDF/JPG/PNG, maksimal 2MB)'),
+                                    ]),
+                            ])
+                            ->columns(1)
+                            ->minItems(0)
+                            ->maxItems(5)
+                            ->defaultItems(0)
+                            ->reorderable(false)
+                            ->addActionLabel('+ Tambah Organisasi')
+                            ->itemLabel(fn (array $state): ?string => ($state['nama_organisasi'] ?? 'Organisasi Baru') . (!empty($state['periode_jabatan']) ? ' (' . $state['periode_jabatan'] . ')' : '')),
                     ]),
 
-                // SECTION UPLOAD TRANSKRIP PRESTASI
-                Section::make('📄 Upload Transkrip Prestasi')
-                    ->description('Upload transkrip prestasi yang sudah ditandatangani')
+                // SECTION UPLOAD TRANSKRIP PRESTASI DAN ORGANISASI (Page 7 & Page 9)
+                Section::make('📄 Upload Transkrip Prestasi dan Organisasi')
+                    ->description('Upload transkrip prestasi dan organisasi yang sudah ditandatangani')
                     ->collapsible()
+                    ->visible(fn (Get $get) => $get('status_kepemilikan') === 'punya')
                     ->schema([
                         FileUpload::make('file_transkrip_prestasi')
-                            ->label('Transkrip Prestasi (dengan TTD Kepala Sekolah)')
+                            ->label('Transkrip Prestasi dan Organisasi (dengan TTD Kepala Sekolah)')
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(3072)
+                            ->maxSize(2048)
                             ->disk('public')
                             ->directory('transkrip-prestasi')
                             ->visibility('public')
                             ->openable()
                             ->downloadable()
                             ->previewable(false)
-                            ->helperText('Upload transkrip prestasi yang sudah ditandatangani kepala sekolah (PDF, maksimal 3MB)')
+                            ->helperText('Upload transkrip prestasi dan organisasi yang sudah ditandatangani kepala sekolah (PDF, maksimal 2MB)')
                             ->columnSpanFull(),
                     ]),
 
-                // PREVIEW TRANSKRIP PRESTASI
-                Section::make('📊 Preview Transkrip Prestasi')
-                    ->description('Lihat transkrip prestasi yang sudah diupload')
+                // PREVIEW TRANSKRIP PRESTASI DAN ORGANISASI
+                Section::make('📊 Preview Transkrip Prestasi dan Organisasi')
+                    ->description('Lihat transkrip prestasi dan organisasi yang sudah diupload')
                     ->collapsible()
                     ->collapsed(false)
+                    ->visible(fn (Get $get, $record) => $get('status_kepemilikan') === 'punya' && $record?->dokumenPendukung?->file_transkrip_prestasi)
                     ->schema([
                         ViewField::make('file_transkrip_prestasi_preview')
-                            ->label('📑 Transkrip Prestasi')
+                            ->label('📑 Transkrip Prestasi dan Organisasi')
                             ->view('filament.components.pdf-viewer')
                             ->viewData(fn ($record) => [
                                 'url' => $record?->dokumenPendukung?->file_transkrip_prestasi 
                                     ? asset('storage/' . $record->dokumenPendukung->file_transkrip_prestasi) 
                                     : null
                             ])
-                            ->columnSpanFull()
-                            ->visible(fn ($record) => $record?->dokumenPendukung?->file_transkrip_prestasi),
-                    ])
-                    ->visible(fn ($record) => $record?->dokumenPendukung?->file_transkrip_prestasi),
+                            ->columnSpanFull(),
+                    ]),
 
-                                    // PREVIEW ORGANISASI
+                // PREVIEW ORGANISASI
                 Section::make('📊 Preview Bukti Organisasi')
                     ->description('Lihat Bukti Organisasi yang sudah diupload')
                     ->collapsible()
                     ->collapsed(false)
-                    ->schema([
-                        ViewField::make('file_Bukti_Organisasi_preview')
-                            ->label('📑 Bukti Organisasi')
-                            ->view('filament.components.pdf-viewer')
-                            ->viewData(fn ($record) => [
-                                'url' => $record?->Organisasi?->file_bukti_organisasi 
-                                    ? asset('storage/' . $record->Organisasi->file_bukti_organisasi) 
-                                    : null
-                            ])
-                            ->columnSpanFull()
-                            ->visible(fn ($record) => $record?->Organisasi?->file_bukti_organisasi),
-                    ])
-                    ->visible(fn ($record) => $record?->Organisasi?->file_bukti_organisasi),
-
-
+                    ->visible(fn (Get $get, $record) => $get('status_kepemilikan') === 'punya' && $record && $record->organisasi()->whereNotNull('file_bukti_organisasi')->exists())
+                    ->schema(function ($record) {
+                        $schemas = [];
+                        if ($record) {
+                            $orgs = $record->organisasi()->whereNotNull('file_bukti_organisasi')->get();
+                            foreach ($orgs as $index => $org) {
+                                $num = $index + 1;
+                                $schemas[] = ViewField::make("file_bukti_organisasi_{$index}_preview")
+                                    ->label("📑 Bukti Organisasi {$num}: " . ($org->nama_organisasi ?? 'Organisasi'))
+                                    ->view('filament.components.pdf-viewer')
+                                    ->viewData([
+                                        'url' => asset('storage/' . $org->file_bukti_organisasi)
+                                    ])
+                                    ->columnSpanFull();
+                            }
+                        }
+                        return $schemas;
+                    }),
             ]);
     }
 
@@ -298,22 +340,14 @@ class EditPrestasiOrganisasi extends EditRecord
     {
         $this->record->load(['organisasi', 'dokumenPendukung', 'prestasi']);
         
-        if ($this->record->organisasi) {
-            $excludedFields = ['id', 'pendaftaran_id', 'created_at', 'updated_at'];
-            foreach ($this->record->organisasi->toArray() as $key => $value) {
-                if (!in_array($key, $excludedFields)) {
-                    $data[$key] = $value;
-                }
-            }
-        }
+        $hasPrestasi = $this->record->prestasi->isNotEmpty();
+        $hasOrganisasi = $this->record->organisasi->isNotEmpty();
+        $hasTranskrip = !empty($this->record->dokumenPendukung?->file_transkrip_prestasi);
+
+        $data['status_kepemilikan'] = ($hasPrestasi || $hasOrganisasi || $hasTranskrip) ? 'punya' : 'tidak_punya';
         
         if ($this->record->dokumenPendukung) {
-            $excludedFields = ['id', 'pendaftaran_id', 'created_at', 'updated_at'];
-            foreach ($this->record->dokumenPendukung->toArray() as $key => $value) {
-                if (!in_array($key, $excludedFields)) {
-                    $data[$key] = $value;
-                }
-            }
+            $data['file_transkrip_prestasi'] = $this->record->dokumenPendukung->file_transkrip_prestasi;
         }
         
         return $data;
@@ -322,66 +356,45 @@ class EditPrestasiOrganisasi extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         unset($data['created_at'], $data['updated_at']);
-        
-        foreach (['file_bukti_organisasi', 'file_transkrip_prestasi'] as $field) {
-            if (isset($data[$field]) && is_array($data[$field])) {
-                $data[$field] = $data[$field][0] ?? '';
-            }
-        }
-        
         return [];
     }
 
 protected function afterSave(): void
 {
     $data = $this->form->getState();
+    $statusKepemilikan = $data['status_kepemilikan'] ?? 'tidak_punya';
     
     Log::info('💾 Saving Prestasi & Organisasi', [
         'pendaftaran_id' => $this->record->id,
+        'status_kepemilikan' => $statusKepemilikan,
         'is_revision_mode' => $this->needsRevision(),
-        'has_prestasi' => isset($data['prestasi']) && count($data['prestasi']) > 0,
-        'has_organisasi' => !empty($data['nama_organisasi']),
     ]);
 
     try {
-        DB::transaction(function () use ($data) {
-            // 1. Save Organisasi
-            $organisasiData = [
-                'nama_organisasi' => $data['nama_organisasi'] ?? null,
-                'jabatan' => $data['jabatan'] ?? null,
-                'file_bukti_organisasi' => is_array($data['file_bukti_organisasi'] ?? null) 
-                    ? ($data['file_bukti_organisasi'][0] ?? null)
-                    : ($data['file_bukti_organisasi'] ?? null),
-            ];
-            
-            $organisasiData = array_filter($organisasiData, fn($v) => $v !== null && $v !== '');
-            
-            if (!empty($organisasiData)) {
-                $this->record->organisasi()->updateOrCreate(
-                    ['pendaftaran_id' => $this->record->id],
-                    $organisasiData
-                );
-            }
-            
-            // 2. Save Dokumen Pendukung
-            $dokumenData = [
-                'file_transkrip_prestasi' => is_array($data['file_transkrip_prestasi'] ?? null)
-                    ? ($data['file_transkrip_prestasi'][0] ?? null)
-                    : ($data['file_transkrip_prestasi'] ?? null),
-            ];
-            
-            $dokumenData = array_filter($dokumenData, fn($v) => $v !== null && $v !== '');
-            
-            if (!empty($dokumenData)) {
-                $this->record->dokumenPendukung()->updateOrCreate(
-                    ['pendaftaran_id' => $this->record->id],
-                    $dokumenData
-                );
+        DB::transaction(function () use ($data, $statusKepemilikan) {
+            if ($statusKepemilikan === 'tidak_punya') {
+                $this->record->prestasi()->delete();
+                $this->record->organisasi()->delete();
+                if ($this->record->dokumenPendukung) {
+                    $this->record->dokumenPendukung()->update(['file_transkrip_prestasi' => null]);
+                }
+            } else {
+                // Save Dokumen Pendukung
+                $fileTranskrip = $data['file_transkrip_prestasi'] ?? null;
+                if (is_array($fileTranskrip)) {
+                    $fileTranskrip = $fileTranskrip[0] ?? null;
+                }
+                
+                if ($fileTranskrip) {
+                    $this->record->dokumenPendukung()->updateOrCreate(
+                        ['pendaftaran_id' => $this->record->id],
+                        ['file_transkrip_prestasi' => $fileTranskrip]
+                    );
+                }
             }
 
-            // ✅ TANDAI PRESTASI & ORGANISASI SUDAH DISIMPAN
+            // TANDAI PRESTASI & ORGANISASI SUDAH DISIMPAN
             $this->record->update(['prestasi_organisasi_completed' => true]);
-
             $this->record->refresh();
 
             // 3. ✅ HANDLE VERIFIKASI BERDASARKAN MODE

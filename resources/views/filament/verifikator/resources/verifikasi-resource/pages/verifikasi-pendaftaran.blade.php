@@ -163,7 +163,10 @@
             </div>
             @endif
 
-            @if($this->record->organisasi)
+            @php
+                $organisasiList = $this->record->organisasi instanceof \Illuminate\Database\Eloquent\Collection ? $this->record->organisasi : collect($this->record->organisasi ? [$this->record->organisasi] : []);
+            @endphp
+            @if($organisasiList->count() > 0)
             <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <div class="flex items-center gap-2 mb-3">
                     <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900">
@@ -171,18 +174,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Organisasi</h3>
+                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Organisasi ({{ $organisasiList->count() }})</h3>
                 </div>
                 <div class="space-y-2 text-xs">
+                    @foreach($organisasiList as $org)
                     <div class="rounded-lg border border-gray-100 bg-indigo-50 p-3 dark:border-gray-700 dark:bg-indigo-900/10">
-                        <div class="font-semibold text-gray-700 dark:text-gray-200">{{ $this->record->organisasi->nama_organisasi }}</div>
+                        <div class="font-semibold text-gray-700 dark:text-gray-200">{{ $org->nama_organisasi }}</div>
                         <div class="mt-2 flex items-center gap-2">
                             <span class="text-gray-600 dark:text-gray-400">Jabatan:</span>
                             <span class="rounded bg-indigo-200 px-2 py-0.5 text-xs font-semibold text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200">
-                                {{ $this->record->organisasi->jabatan }}
+                                {{ $org->jabatan }}{{ $org->periode_jabatan ? ' (' . $org->periode_jabatan . ')' : '' }}
                             </span>
                         </div>
                     </div>
+                    @endforeach
                 </div>
             </div>
             @endif

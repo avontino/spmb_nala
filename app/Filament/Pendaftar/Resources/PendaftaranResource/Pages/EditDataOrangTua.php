@@ -150,7 +150,10 @@ return $form
                                 'Petani' => 'Petani',
                                 'Wiraswasta' => 'Wiraswasta',
                                 'PNS' => 'PNS',
-                                'Polri/TNI' => 'Polri/TNI',
+                                'TNI AD' => 'TNI AD',
+                                'TNI AL' => 'TNI AL',
+                                'TNI AU' => 'TNI AU',
+                                'Polri' => 'Polri',
                                 'Perangkat Desa' => 'Perangkat Desa',
                                 'Nelayan' => 'Nelayan',
                                 'Guru/Dosen' => 'Guru/Dosen',
@@ -243,7 +246,10 @@ return $form
                                 'Petani' => 'Petani',
                                 'Wiraswasta' => 'Wiraswasta',
                                 'PNS' => 'PNS',
-                                'Polri/TNI' => 'Polri/TNI',
+                                'TNI AD' => 'TNI AD',
+                                'TNI AL' => 'TNI AL',
+                                'TNI AU' => 'TNI AU',
+                                'Polri' => 'Polri',
                                 'Perangkat Desa' => 'Perangkat Desa',
                                 'Nelayan' => 'Nelayan',
                                 'Guru/Dosen' => 'Guru/Dosen',
@@ -410,14 +416,14 @@ return $form
                     ->label('Kartu Keluarga & KTP Orang Tua')
                     ->required()
                     ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png'])
-                    ->maxSize(5120)
+                    ->maxSize(2048)
                     ->disk('public')
                     ->directory('kk-ktp')
                     ->visibility('public')
                     ->openable()
                     ->downloadable()
                     ->previewable(false)
-                    ->helperText('Upload dalam 1 file PDF atau gambar (maks 5MB)')
+                    ->helperText('Upload dalam 1 file PDF atau gambar (maks 2MB)')
                     ->columnSpanFull(),
 
                 // PREVIEW KK & KTP

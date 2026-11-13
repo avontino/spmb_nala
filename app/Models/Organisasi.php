@@ -13,6 +13,7 @@ class Organisasi extends Model
         'pendaftaran_id',
         'nama_organisasi',
         'jabatan',
+        'periode_jabatan',
         'file_bukti_organisasi',
     ];
 

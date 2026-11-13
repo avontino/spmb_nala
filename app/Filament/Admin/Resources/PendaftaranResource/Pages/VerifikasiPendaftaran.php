@@ -879,9 +879,12 @@ class VerifikasiPendaftaran extends Page implements HasForms
 
     protected function getOrganisasiFields(): array
     {
-        $organisasi = $this->record->organisasi;
+        $organisasiList = $this->record->organisasi;
+        if ($organisasiList instanceof \Illuminate\Database\Eloquent\Model) {
+            $organisasiList = collect([$organisasiList]);
+        }
         
-        if (!$organisasi || empty($organisasi->nama_organisasi)) {
+        if (!$organisasiList || $organisasiList->isEmpty()) {
             return [
                 Placeholder::make('no_organisasi')
                     ->label('')
@@ -889,33 +892,32 @@ class VerifikasiPendaftaran extends Page implements HasForms
             ];
         }
         
-        return [
-            Grid::make(2)
+        $fields = [];
+        foreach ($organisasiList as $index => $org) {
+            $num = $index + 1;
+            $periode = $org->periode_jabatan ? " (Periode: {$org->periode_jabatan})" : '';
+            $fields[] = Grid::make(3)
                 ->schema([
-                    Placeholder::make('organisasi_nama')
-                        ->label('Nama Organisasi')
-                        ->content($organisasi->nama_organisasi),
+                    Placeholder::make("organisasi_nama_{$index}")
+                        ->label("Organisasi {$num}")
+                        ->content($org->nama_organisasi ?? '-'),
                         
-                    Placeholder::make('organisasi_jabatan')
+                    Placeholder::make("organisasi_jabatan_{$index}")
                         ->label('Jabatan')
-                        ->content($organisasi->jabatan),
+                        ->content(($org->jabatan ?? '-') . $periode),
                         
-                    
-                ]),
-            Grid::make(1)
-                ->schema([
-                    
-                        
-                    ViewField::make('organisasi_bukti')
+                    ViewField::make("organisasi_bukti_{$index}")
                         ->label('Bukti')
                         ->view('filament.components.file-viewer', [
-                            'file' => $organisasi->file_bukti_organisasi,
-                            'label' => 'Bukti Organisasi',
+                            'file' => $org->file_bukti_organisasi,
+                            'label' => "Bukti Organisasi {$num}",
                             'type' => 'pdf'
                         ])
-                        ->visible(fn () => !empty($organisasi->file_bukti_organisasi)),
-                ]),
-        ];
+                        ->visible(fn () => !empty($org->file_bukti_organisasi)),
+                ]);
+        }
+        
+        return $fields;
     }
 
     public function updateButtonState(): void
@@ -1144,8 +1146,9 @@ class VerifikasiPendaftaran extends Page implements HasForms
     {
         $prestasiCount = $this->record->prestasi()->count();
         $organisasi = $this->record->organisasi;
+        $organisasiCount = $organisasi instanceof \Illuminate\Support\Collection ? $organisasi->count() : ($organisasi ? 1 : 0);
         
-        return $prestasiCount . ' prestasi, ' . ($organisasi ? '1' : '0') . ' organisasi';
+        return $prestasiCount . ' prestasi, ' . $organisasiCount . ' organisasi';
     }
 
     public function isAllDataComplete(): bool

@@ -202,16 +202,22 @@ class ViewPendaftaran extends ViewRecord
 
                 Section::make('Organisasi')
                     ->schema([
-                        Grid::make(2)
+                        RepeatableEntry::make('organisasi')
+                            ->label('Daftar Organisasi')
                             ->schema([
-                                TextEntry::make('organisasi.nama_organisasi')
+                                TextEntry::make('nama_organisasi')
                                     ->label('Nama Organisasi'),
-                                TextEntry::make('organisasi.jabatan')
+                                TextEntry::make('jabatan')
                                     ->label('Jabatan'),
-                            ]),
+                                TextEntry::make('periode_jabatan')
+                                    ->label('Periode Jabatan')
+                                    ->placeholder('-'),
+                            ])
+                            ->columns(3)
+                            ->columnSpanFull(),
                     ])
                     ->collapsible()
-                    ->visible(fn () => $this->record->organisasi !== null),
+                    ->visible(fn () => $this->record->organisasi()->exists()),
             ]);
     }
 

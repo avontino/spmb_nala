@@ -21,6 +21,8 @@ class DataPribadi extends Model
         'tinggi_badan',
         'berat_badan',
         'status_dalam_keluarga',
+        'anak_ke',
+        'jumlah_saudara',
         'riwayat_penyakit',
         'status_alergi',              // ✅ BARU
         'keterangan_alergi',          // ✅ BARU

@@ -180,6 +180,22 @@ Section::make('Identitas Diri')
                     ->label('Hobi')
                     ->maxLength(255)
                     ->placeholder('Misal: Membaca, Olahraga, dll'),
+
+                TextInput::make('anak_ke')
+                    ->label('Anak ke')
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(50)
+                    ->placeholder('Contoh: 1')
+                    ->helperText('Urutan anak dalam keluarga'),
+
+                TextInput::make('jumlah_saudara')
+                    ->label('Dari Berapa Bersaudara')
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(50)
+                    ->placeholder('Contoh: 3')
+                    ->helperText('Jumlah saudara kandung termasuk Anda'),
             ]),
 
         Textarea::make('riwayat_penyakit')
@@ -311,7 +327,7 @@ Section::make('Kontak & Rencana Studi')
                     ->label('Rencana Studi Lanjut Setelah SMA')
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Contoh: Kedokteran, Teknik Informatika, Hukum, Sastra Inggris')
+                    ->placeholder('Contoh: Akademi TNI, Akademi Polri, Kedokteran, Teknik Informatika, Hukum, Sastra Inggris, dll')
                     ->helperText('Tuliskan jurusan/program studi yang diminati setelah lulus SMA'),
             ]),
 
@@ -388,7 +404,7 @@ protected function afterSave(): void
             $allowedFields = [
                 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir',
                 'agama', 'golongan_darah', 'tinggi_badan', 'berat_badan',
-                'status_dalam_keluarga', 'hobi', 'riwayat_penyakit',
+                'status_dalam_keluarga', 'anak_ke', 'jumlah_saudara', 'hobi', 'riwayat_penyakit',
                 'status_alergi', 'keterangan_alergi', 'bahasa_asing_dikuasai',
                 'alamat_lengkap', 'desa_kelurahan', 'kecamatan', 'kota_kabupaten',
                 'provinsi', 'no_hp', 'pilihan_jurusan', 'pas_foto'

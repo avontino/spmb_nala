@@ -581,14 +581,14 @@ class EditNilaiRaport extends EditRecord
                             ->label('Transkrip Nilai Raport (Semester 1-4)')
                             ->required()
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(5120)
+                            ->maxSize(2048)
                             ->disk('public')
                             ->directory('transkrip-nilai')
                             ->visibility('public')
                             ->openable()
                             ->downloadable()
                             ->previewable(false)
-                            ->helperText('Upload transkrip nilai semester 1-4 dalam 1 file PDF (maksimal 5MB)')
+                            ->helperText('Upload transkrip nilai semester 1-4 dalam 1 file PDF (maksimal 2MB)')
                             ->columnSpanFull(),
                     ]),
 

@@ -241,9 +241,9 @@ class PendaftaranExport extends StringValueBinder implements FromQuery, WithHead
             $pendaftaran->prestasi->count() >= 3 ? $pendaftaran->prestasi->get(2)->tingkat_prestasi : null,
             $pendaftaran->prestasi->count() >= 3 ? ($pendaftaran->prestasi->get(2)->file_bukti_prestasi ? 'ada' : 'tidak') : null,
             // data organisasi
-            $pendaftaran->organisasi ? $pendaftaran->organisasi->nama_organisasi : null,
-            $pendaftaran->organisasi ? $pendaftaran->organisasi->jabatan : null,
-            $pendaftaran->organisasi ? ($pendaftaran->organisasi->file_bukti_organisasi ? 'ada' : 'tidak') : null,
+            ($pendaftaran->organisasi instanceof \Illuminate\Support\Collection ? $pendaftaran->organisasi->first() : $pendaftaran->organisasi)?->nama_organisasi,
+            ($pendaftaran->organisasi instanceof \Illuminate\Support\Collection ? $pendaftaran->organisasi->first() : $pendaftaran->organisasi)?->jabatan,
+            (($pendaftaran->organisasi instanceof \Illuminate\Support\Collection ? $pendaftaran->organisasi->first() : $pendaftaran->organisasi)?->file_bukti_organisasi ? 'ada' : 'tidak'),
             // dokumen pendukung
             $pendaftaran->dokumenPendukung ? ($pendaftaran->dokumenPendukung->file_transkrip_prestasi ? 'ada' : 'tidak') : null,
         ];

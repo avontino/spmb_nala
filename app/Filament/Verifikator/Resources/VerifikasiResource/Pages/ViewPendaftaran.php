@@ -258,24 +258,22 @@ class ViewPendaftaran extends ViewRecord
 
                 Section::make('Organisasi')
                     ->schema([
-                        Grid::make(2)
+                        RepeatableEntry::make('organisasi')
+                            ->label('Daftar Organisasi')
                             ->schema([
-                                TextEntry::make('organisasi.nama_organisasi')
+                                TextEntry::make('nama_organisasi')
                                     ->label('Nama Organisasi'),
-                                TextEntry::make('organisasi.jabatan')
+                                TextEntry::make('jabatan')
                                     ->label('Jabatan'),
-                                ViewEntry::make('organisasi.file_bukti_organisasi')
-                                    ->label('Preview Bukti Organisasi')
-                                    ->visible(fn () => $this->record->organisasi && $this->record->organisasi->file_bukti_organisasi !== null)
-                                    ->view('filament.components.file-viewer', [
-                                        'file' => $this->record->organisasi?->file_bukti_organisasi,
-                                        'label' => 'Bukti Organisasi',
-                                        'url'  => null,
-                                    ])
-                            ]),
+                                TextEntry::make('periode_jabatan')
+                                    ->label('Periode Jabatan')
+                                    ->placeholder('-'),
+                            ])
+                            ->columns(3)
+                            ->columnSpanFull(),
                     ])
                     ->collapsible()
-                    ->visible(fn () => $this->record->organisasi !== null),
+                    ->visible(fn () => $this->record->organisasi()->exists()),
                 
                 // data pendukung contain file preview file_transkrip_nilai
                 Section::make('Data Pendukung')

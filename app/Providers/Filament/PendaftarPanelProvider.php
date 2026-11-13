@@ -35,7 +35,7 @@ class PendaftarPanelProvider extends PanelProvider
             ->path('pendaftar')
             ->login(Login::class)
             ->registration(\App\Filament\Pendaftar\Pages\Auth\Register::class)
-            ->passwordReset()
+            ->passwordReset(\App\Filament\Pendaftar\Pages\Auth\RequestPasswordReset::class)
                
             ->brandName(view('filament.pendaftar.brand'))
             ->favicon(asset('images/logo.png'))

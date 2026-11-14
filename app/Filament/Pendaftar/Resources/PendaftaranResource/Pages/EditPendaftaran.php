@@ -54,6 +54,7 @@ class EditPendaftaran extends EditRecord
                                                 ->label('Nama Lengkap Pendaftar')
                                                 ->required()
                                                 ->maxLength(255)
+                                                ->default(fn ($record) => $record?->user?->name)
                                                 ->placeholder('Sesuai Ijazah')
                                                 ->helperText('Tulis nama lengkap sesuai ijazah'),
 

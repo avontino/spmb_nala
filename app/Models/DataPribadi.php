@@ -55,4 +55,16 @@ class DataPribadi extends Model
     {
         return $this->belongsTo(Pendaftaran::class);
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function (DataPribadi $dataPribadi) {
+            if (!empty($dataPribadi->nama_lengkap)) {
+                $user = $dataPribadi->pendaftaran?->user;
+                if ($user && $user->name !== $dataPribadi->nama_lengkap) {
+                    $user->update(['name' => $dataPribadi->nama_lengkap]);
+                }
+            }
+        });
+    }
 }

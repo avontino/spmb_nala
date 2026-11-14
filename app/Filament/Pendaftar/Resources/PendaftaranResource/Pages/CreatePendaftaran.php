@@ -52,6 +52,7 @@ class CreatePendaftaran extends CreateRecord
                                                 ->label('Nama Lengkap Pendaftar')
                                                 ->required()
                                                 ->maxLength(255)
+                                                ->default(fn () => auth()->user()?->name)
                                                 ->placeholder('Sesuai Ijazah')
                                                 ->helperText('Tulis nama lengkap sesuai ijazah'),
 

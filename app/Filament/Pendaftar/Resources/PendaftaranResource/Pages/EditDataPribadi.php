@@ -99,6 +99,7 @@ Section::make('Identitas Diri')
                     ->label('Nama Lengkap Pendaftar')
                     ->required()
                     ->maxLength(255)
+                    ->default(fn () => $this->record->user?->name)
                     ->regex('/^[a-zA-Z\s.\',-]+$/')
                     ->validationMessages([
                         'regex' => 'Nama hanya boleh berisi huruf, spasi, titik (.), koma (,), tanda petik (\'), dan strip (-).',
@@ -356,7 +357,7 @@ Section::make('Kontak & Rencana Studi')
     protected function mutateFormDataBeforeFill(array $data): array
     {
         // Optimasi query untuk menghindari N+1 problem
-        $this->record->load('dataPribadi');
+        $this->record->load(['dataPribadi', 'user']);
         
         if ($this->record->dataPribadi) {
             $excludedFields = ['id', 'pendaftaran_id', 'created_at', 'updated_at'];
@@ -367,15 +368,19 @@ Section::make('Kontak & Rencana Studi')
                 }
             }
             // ✅ FORMAT NOMOR HP UNTUK DISPLAY DI FORM
-        if (isset($data['no_hp']) && !empty($data['no_hp'])) {
-            $no_hp = $data['no_hp'];
-            
-            // Jika sudah ada format 0, ubah ke +62 untuk display
-            if (str_starts_with($no_hp, '0')) {
-                $data['no_hp'] = '' . substr($no_hp, 1);
+            if (isset($data['no_hp']) && !empty($data['no_hp'])) {
+                $no_hp = $data['no_hp'];
+                
+                // Jika sudah ada format 0, ubah ke +62 untuk display
+                if (str_starts_with($no_hp, '0')) {
+                    $data['no_hp'] = '' . substr($no_hp, 1);
+                }
             }
         }
         
+        // ✅ Auto-prefill nama_lengkap dari akun registrasi (users.name) jika belum ada di data_pribadi
+        if (empty($data['nama_lengkap']) && $this->record->user) {
+            $data['nama_lengkap'] = $this->record->user->name;
         }
         
         return $data;

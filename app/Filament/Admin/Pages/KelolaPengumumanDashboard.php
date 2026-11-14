@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Pages;
 
 use App\Models\AppSetting;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -109,9 +110,22 @@ class KelolaPengumumanDashboard extends Page implements HasForms
                                     ->required()
                                     ->maxLength(120),
                                 Textarea::make('description')
-                                    ->label('Penjelasan')
+                                    ->label('Penjelasan (Opsional jika hanya tautan)')
                                     ->rows(2)
-                                    ->required(),
+                                    ->nullable()
+                                    ->helperText('Jika memasukkan link di sini atau pada isian link di bawah, tampilan akan otomatis diubah menjadi tombol yang rapi.'),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('link_url')
+                                            ->label('Tautan / URL Tombol (Opsional)')
+                                            ->placeholder('https://chat.whatsapp.com/... atau https://...')
+                                            ->url()
+                                            ->helperText('Jika diisi, otomatis muncul tombol link di bawah poin.'),
+                                        TextInput::make('link_label')
+                                            ->label('Label Tombol (Opsional)')
+                                            ->placeholder('Contoh: Gabung Group WA / Buka Link')
+                                            ->helperText('Kosongkan untuk otomatis ("Gabung Grup WhatsApp" / "Buka Tautan")'),
+                                    ]),
                             ])
                             ->defaultItems(4)
                             ->reorderableWithButtons()

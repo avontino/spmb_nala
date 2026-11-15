@@ -1,7 +1,23 @@
 @php
+    // Support array or JSON-encoded file paths from FileUpload
+    if (isset($file)) {
+        if (is_array($file)) {
+            $file = reset($file);
+        }
+        if (is_string($file) && str_starts_with(trim($file), '[')) {
+            $decoded = json_decode($file, true);
+            if (is_array($decoded)) {
+                $file = reset($decoded);
+            }
+        }
+        $file = is_string($file) ? $file : null;
+    } else {
+        $file = null;
+    }
+
     // Support both passing methods: $url directly OR $file that needs to be converted
     $fileUrl = $url ?? ($file ? asset('storage/' . $file) : null);
-    $fileExtension = $file ? pathinfo($file, PATHINFO_EXTENSION) : ($fileUrl ? pathinfo(parse_url($fileUrl, PHP_URL_PATH), PATHINFO_EXTENSION) : null);
+    $fileExtension = $file ? pathinfo($file, PATHINFO_EXTENSION) : ($fileUrl ? pathinfo((string) parse_url($fileUrl, PHP_URL_PATH), PATHINFO_EXTENSION) : null);
     $fileType = $type ?? (in_array(strtolower($fileExtension ?? ''), ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? 'image' : 'pdf');
 @endphp
 

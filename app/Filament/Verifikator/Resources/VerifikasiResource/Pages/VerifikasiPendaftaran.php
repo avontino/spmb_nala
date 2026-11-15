@@ -346,14 +346,14 @@ class VerifikasiPendaftaran extends Page implements HasForms
                                     ->schema([
                                         Placeholder::make('do_total_pemasukan')
                                             ->label('Total Pemasukan/Bulan')
-                                            ->content(fn () => $this->record->dataOrangTua?->total_pemasukan 
-                                                ? 'Rp ' . number_format((float) $this->record->dataOrangTua->total_pemasukan, 0, ',', '.') 
+                                            ->content(fn () => !empty($this->record->dataOrangTua?->total_pemasukan) 
+                                                ? 'Rp ' . number_format((float) ($this->record->dataOrangTua?->total_pemasukan ?? 0), 0, ',', '.') 
                                                 : '-'),
                                             
                                         Placeholder::make('do_total_pengeluaran')
                                             ->label('Total Pengeluaran/Bulan')
-                                            ->content(fn () => $this->record->dataOrangTua?->total_pengeluaran 
-                                                ? 'Rp ' . number_format((float) $this->record->dataOrangTua->total_pengeluaran, 0, ',', '.') 
+                                            ->content(fn () => !empty($this->record->dataOrangTua?->total_pengeluaran) 
+                                                ? 'Rp ' . number_format((float) ($this->record->dataOrangTua?->total_pengeluaran ?? 0), 0, ',', '.') 
                                                 : '-'),
                                             
                                         Placeholder::make('do_no_hp')

@@ -136,8 +136,7 @@ class VerifikasiResource extends Resource
                     ->label('Lihat Detail')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn (Pendaftaran $record) => static::getUrl('view', ['record' => $record]))
-                    ->visible(fn (Pendaftaran $record) => in_array($record->status, ['approved', 'rejected'])),
+                    ->url(fn (Pendaftaran $record) => static::getUrl('view', ['record' => $record])),
             ], position: Tables\Enums\ActionsPosition::BeforeColumns)
             ->defaultSort('submitted_at', 'desc')
             ->poll('30s');

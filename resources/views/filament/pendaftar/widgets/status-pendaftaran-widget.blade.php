@@ -59,7 +59,7 @@
         @endif
 
         {{-- Section Status Penerimaan Tahap 1 (sembunyikan jika sudah ada tahap 2) --}}
-        @if($pendaftaran->penerimaan && !$penerimaanTahap2)
+        @if($pendaftaran && $pendaftaran->penerimaan && !$penerimaanTahap2)
             @if($pendaftaran->penerimaan->status === 'lolos')
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
                     {{-- Section Penerimaan Lolos --}}

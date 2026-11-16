@@ -74,7 +74,7 @@ class Pendaftaran extends Model
             return static::$userRequestCache[$userId];
         }
 
-        return static::$userRequestCache[$userId] = static::with([
+        $pendaftaran = static::with([
             'dataPribadi',
             'dataOrangTua',
             'dataSekolahAsal',
@@ -83,6 +83,30 @@ class Pendaftaran extends Model
             'penerimaan',
             'penerimaanTahap2',
         ])->where('user_id', $userId)->first();
+
+        // Auto-heal: jika pendaftar belum memiliki data pendaftaran, buatkan otomatis
+        if (! $pendaftaran && auth()->check() && auth()->id() === $userId && auth()->user()->isPendaftar()) {
+            try {
+                $pendaftaran = static::create([
+                    'user_id' => $userId,
+                    'status' => 'draft',
+                ]);
+
+                $pendaftaran->load([
+                    'dataPribadi',
+                    'dataOrangTua',
+                    'dataSekolahAsal',
+                    'nilaiRaport',
+                    'latestVerifikasi.verifikator',
+                    'penerimaan',
+                    'penerimaanTahap2',
+                ]);
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to auto-create pendaftaran for user ' . $userId . ': ' . $e->getMessage());
+            }
+        }
+
+        return static::$userRequestCache[$userId] = $pendaftaran;
     }
     
     protected $fillable = [
@@ -401,10 +425,17 @@ public function isNilaiRaportComplete(): bool
     {
         $year = date('Y');
         $month = date('m');
-        $lastNumber = self::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->count() + 1;
+        $prefix = sprintf('SPMB-%s%s-', $year, $month);
 
-        return sprintf('SPMB-%s%s-%04d', $year, $month, $lastNumber);
+        $lastRecord = self::where('nomor_pendaftaran', 'LIKE', $prefix . '%')
+            ->orderBy('nomor_pendaftaran', 'desc')
+            ->first();
+
+        $lastNumber = 0;
+        if ($lastRecord && preg_match('/-(\d+)$/', $lastRecord->nomor_pendaftaran, $matches)) {
+            $lastNumber = (int) $matches[1];
+        }
+
+        return sprintf('%s%04d', $prefix, $lastNumber + 1);
     }
 }

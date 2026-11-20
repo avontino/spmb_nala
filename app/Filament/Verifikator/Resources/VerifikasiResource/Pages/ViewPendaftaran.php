@@ -4,6 +4,7 @@ namespace App\Filament\Verifikator\Resources\VerifikasiResource\Pages;
 
 use App\Filament\Verifikator\Resources\VerifikasiResource;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\Section;
@@ -306,6 +307,37 @@ class ViewPendaftaran extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('reset_tolak')
+                ->label('Batalkan Penolakan')
+                ->icon('heroicon-o-arrow-uturn-left')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalHeading('Batalkan Status Penolakan')
+                ->modalDescription('Apakah Anda yakin ingin membatalkan status penolakan pendaftar ini? Status akan dikembalikan ke "Menunggu Verifikasi" dan Anda akan langsung diarahkan ke halaman verifikasi.')
+                ->modalSubmitActionLabel('Ya, Batalkan Penolakan')
+                ->visible(fn () => $this->record->status === 'rejected')
+                ->action(function () {
+                    $this->record->update([
+                        'status' => 'submitted',
+                        'verified_at' => null,
+                    ]);
+
+                    if ($this->record->verifikasi()->exists()) {
+                        $this->record->verifikasi()->update([
+                            'status' => 'pending',
+                            'catatan_revisi' => null,
+                        ]);
+                    }
+
+                    Notification::make()
+                        ->title('Penolakan Berhasil Dibatalkan')
+                        ->body('Status pendaftar dikembalikan ke "Menunggu Verifikasi". Silakan lakukan verifikasi ulang.')
+                        ->success()
+                        ->send();
+
+                    $this->redirect(VerifikasiResource::getUrl('verifikasi', ['record' => $this->record]));
+                }),
+
             Actions\Action::make('print')
                 ->label('Cetak')
                 ->icon('heroicon-o-printer')

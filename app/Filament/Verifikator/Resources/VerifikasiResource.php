@@ -5,6 +5,7 @@ namespace App\Filament\Verifikator\Resources;
 use App\Filament\Verifikator\Resources\VerifikasiResource\Pages;
 use App\Models\Pendaftaran;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -131,7 +132,36 @@ class VerifikasiResource extends Resource
                     ->color('primary')
                     ->url(fn (Pendaftaran $record) => static::getUrl('verifikasi', ['record' => $record]))
                     ->visible(fn (Pendaftaran $record) => in_array($record->status, ['submitted', 'needs_revision'])),
-                    
+
+                Tables\Actions\Action::make('reset_tolak')
+                    ->label('Batal Tolak')
+                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Batalkan Status Penolakan')
+                    ->modalDescription('Apakah Anda yakin ingin membatalkan status penolakan pendaftar ini? Status akan dikembalikan ke "Menunggu Verifikasi" agar dapat diverifikasi ulang.')
+                    ->modalSubmitActionLabel('Ya, Batalkan Penolakan')
+                    ->visible(fn (Pendaftaran $record) => $record->status === 'rejected')
+                    ->action(function (Pendaftaran $record) {
+                        $record->update([
+                            'status' => 'submitted',
+                            'verified_at' => null,
+                        ]);
+
+                        if ($record->verifikasi()->exists()) {
+                            $record->verifikasi()->update([
+                                'status' => 'pending',
+                                'catatan_revisi' => null,
+                            ]);
+                        }
+
+                        Notification::make()
+                            ->title('Penolakan Berhasil Dibatalkan')
+                            ->body('Status pendaftar dikembalikan ke "Menunggu Verifikasi". Tombol Verifikasi kini aktif kembali.')
+                            ->success()
+                            ->send();
+                    }),
+
                 Tables\Actions\Action::make('lihat')
                     ->label('Lihat Detail')
                     ->icon('heroicon-o-eye')

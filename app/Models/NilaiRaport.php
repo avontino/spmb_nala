@@ -63,7 +63,8 @@ class NilaiRaport extends Model
                 $nilai->nilai_prakarya,
             ];
 
-            $valid = array_filter($subjects, fn($n) => $n !== null);
+            // Nilai 0 diabaikan (untuk mapel yang tidak diajarkan di sekolah asal)
+            $valid = array_filter($subjects, fn($n) => $n !== null && (float) $n > 0);
             $nilai->rata_rata = count($valid) > 0 ? array_sum($valid) / count($valid) : 0;
         });
     }

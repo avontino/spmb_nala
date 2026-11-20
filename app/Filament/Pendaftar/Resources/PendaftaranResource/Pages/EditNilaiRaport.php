@@ -55,7 +55,7 @@ class EditNilaiRaport extends EditRecord
             $get("sem{$semester}_nilai_prakarya"),
         ];
 
-        $validValues = array_filter($values, fn($v) => $v !== null && $v !== '');
+        $validValues = array_filter($values, fn($v) => $v !== null && $v !== '' && (float) $v > 0);
         
         if (count($validValues) === 0) {
             return 'Belum ada nilai';
@@ -144,7 +144,7 @@ class EditNilaiRaport extends EditRecord
 
                 // SECTION NILAI RAPORT - SEMESTER 1-4
                 Section::make('📊 Nilai Raport Semester 1-4')
-                    ->description('Masukkan nilai untuk setiap mata pelajaran per semester. Rata-rata akan dihitung otomatis.')
+                    ->description('Masukkan nilai untuk setiap mata pelajaran per semester. Rata-rata akan dihitung otomatis. Catatan: Jika sekolah asal tidak memiliki mata pelajaran tertentu, isi dengan angka 0 (nilai 0 akan otomatis diabaikan dan tidak mempengaruhi perhitungan rata-rata).')
                     ->schema([
                         // SEMESTER 1
                         Section::make('📚 Semester 1')
@@ -878,7 +878,7 @@ protected function afterSave(): void
         $get("sem{$semester}_nilai_prakarya"),
     ];
 
-    $validValues = array_filter($values, fn($v) => $v !== null && $v !== '');
+    $validValues = array_filter($values, fn($v) => $v !== null && $v !== '' && (float) $v > 0);
     
     if (count($validValues) === 0) {
         return '0.00';
@@ -906,7 +906,7 @@ protected function afterSave(): void
             $get("sem{$sem}_nilai_prakarya"),
         ];
 
-        $validValues = array_filter($values, fn($v) => $v !== null && $v !== '');
+        $validValues = array_filter($values, fn($v) => $v !== null && $v !== '' && (float) $v > 0);
         
         if (count($validValues) > 0) {
             $average = array_sum($validValues) / count($validValues);

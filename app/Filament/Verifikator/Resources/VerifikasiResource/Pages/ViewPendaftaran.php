@@ -215,11 +215,16 @@ class ViewPendaftaran extends ViewRecord
                                     ->color('success'),
                                 Grid::make(5)
                                     ->schema([
-                                        TextEntry::make('nilai_matematika')->label('Matematika'),
+                                        TextEntry::make('nilai_agama')->label('Pendidikan Agama'),
+                                        TextEntry::make('nilai_ppkn')->label('Pendidikan Pancasila'),
                                         TextEntry::make('nilai_bahasa_indonesia')->label('B. Indonesia'),
-                                        TextEntry::make('nilai_bahasa_inggris')->label('B. Inggris'),
+                                        TextEntry::make('nilai_matematika')->label('Matematika'),
                                         TextEntry::make('nilai_ipa')->label('IPA'),
                                         TextEntry::make('nilai_ips')->label('IPS'),
+                                        TextEntry::make('nilai_bahasa_inggris')->label('B. Inggris'),
+                                        TextEntry::make('nilai_seni_budaya')->label('Seni Budaya dan Prakarya'),
+                                        TextEntry::make('nilai_pjok')->label('PJOK'),
+                                        TextEntry::make('nilai_prakarya')->label('Informatika'),
                                     ]),
                             ])
                             ->columnSpanFull(),

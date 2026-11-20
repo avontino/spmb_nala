@@ -497,7 +497,7 @@ class EditPendaftaran extends EditRecord
                                                         ->dehydrated(),
 
                                                     TextInput::make('nilaiRaport.0.nilai_agama')
-                                                        ->label('Agama')
+                                                        ->label('Pendidikan Agama')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -505,7 +505,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.0.nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -553,7 +553,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.0.nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -569,7 +569,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.0.nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -613,7 +613,7 @@ class EditPendaftaran extends EditRecord
                                                         ->dehydrated(),
 
                                                     TextInput::make('nilaiRaport.1.nilai_agama')
-                                                        ->label('Agama')
+                                                        ->label('Pendidikan Agama')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -621,7 +621,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.1.nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -669,7 +669,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.1.nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -685,7 +685,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.1.nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -729,7 +729,7 @@ class EditPendaftaran extends EditRecord
                                                         ->dehydrated(),
 
                                                     TextInput::make('nilaiRaport.2.nilai_agama')
-                                                        ->label('Agama')
+                                                        ->label('Pendidikan Agama')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -737,7 +737,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.2.nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -785,7 +785,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.2.nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -801,7 +801,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.2.nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -845,7 +845,7 @@ class EditPendaftaran extends EditRecord
                                                         ->dehydrated(),
 
                                                     TextInput::make('nilaiRaport.3.nilai_agama')
-                                                        ->label('Agama')
+                                                        ->label('Pendidikan Agama')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -853,7 +853,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.3.nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -901,7 +901,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.3.nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -917,7 +917,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.3.nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -961,7 +961,7 @@ class EditPendaftaran extends EditRecord
                                                         ->dehydrated(),
 
                                                     TextInput::make('nilaiRaport.4.nilai_agama')
-                                                        ->label('Agama')
+                                                        ->label('Pendidikan Agama')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -969,7 +969,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.4.nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -1017,7 +1017,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.4.nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -1033,7 +1033,7 @@ class EditPendaftaran extends EditRecord
                                                         ->live(onBlur: true),
 
                                                     TextInput::make('nilaiRaport.4.nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)

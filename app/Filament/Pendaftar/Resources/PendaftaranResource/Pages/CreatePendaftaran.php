@@ -511,7 +511,7 @@ class CreatePendaftaran extends CreateRecord
                                                         ->step(0.01),
 
                                                     TextInput::make('nilai_ppkn')
-                                                        ->label('PPKN')
+                                                        ->label('Pendidikan Pancasila')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -519,7 +519,7 @@ class CreatePendaftaran extends CreateRecord
                                                         ->step(0.01),
 
                                                     TextInput::make('nilai_bahasa_indonesia')
-                                                        ->label('Bahasa Indonesia')
+                                                        ->label('B. Indonesia')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -551,7 +551,7 @@ class CreatePendaftaran extends CreateRecord
                                                         ->step(0.01),
 
                                                     TextInput::make('nilai_bahasa_inggris')
-                                                        ->label('Bahasa Inggris')
+                                                        ->label('B. Inggris')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -559,7 +559,7 @@ class CreatePendaftaran extends CreateRecord
                                                         ->step(0.01),
 
                                                     TextInput::make('nilai_seni_budaya')
-                                                        ->label('Seni Budaya')
+                                                        ->label('Seni Budaya dan Prakarya')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)
@@ -575,7 +575,7 @@ class CreatePendaftaran extends CreateRecord
                                                         ->step(0.01),
 
                                                     TextInput::make('nilai_prakarya')
-                                                        ->label('Prakarya/TI')
+                                                        ->label('Informatika')
                                                         ->required()
                                                         ->numeric()
                                                         ->minValue(0)

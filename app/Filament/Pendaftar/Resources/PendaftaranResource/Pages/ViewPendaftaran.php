@@ -345,11 +345,11 @@ class ViewPendaftaran extends ViewRecord
                                 Grid::make(5)
                                     ->schema([
                                         TextEntry::make('nilai_agama')
-                                            ->label('Agama')
+                                            ->label('Pendidikan Agama')
                                             ->numeric(decimalPlaces: 2),
 
                                         TextEntry::make('nilai_ppkn')
-                                            ->label('PPKN')
+                                            ->label('Pendidikan Pancasila')
                                             ->numeric(decimalPlaces: 2),
 
                                         TextEntry::make('nilai_bahasa_indonesia')
@@ -373,7 +373,7 @@ class ViewPendaftaran extends ViewRecord
                                             ->numeric(decimalPlaces: 2),
 
                                         TextEntry::make('nilai_seni_budaya')
-                                            ->label('Seni Budaya')
+                                            ->label('Seni Budaya dan Prakarya')
                                             ->numeric(decimalPlaces: 2),
 
                                         TextEntry::make('nilai_pjok')
@@ -381,7 +381,7 @@ class ViewPendaftaran extends ViewRecord
                                             ->numeric(decimalPlaces: 2),
 
                                         TextEntry::make('nilai_prakarya')
-                                            ->label('Prakarya')
+                                            ->label('Informatika')
                                             ->numeric(decimalPlaces: 2),
                                     ]),
                             ])

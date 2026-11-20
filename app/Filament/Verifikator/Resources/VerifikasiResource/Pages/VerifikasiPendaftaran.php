@@ -763,11 +763,11 @@ class VerifikasiPendaftaran extends Page implements HasForms
                         Grid::make(5)
                             ->schema([
                                 Placeholder::make('agama_' . $nilai->semester)
-                                    ->label('Pend. Agama')
+                                    ->label('Pendidikan Agama')
                                     ->content($nilai->nilai_agama ?? '-'),
                                     
                                 Placeholder::make('ppkn_' . $nilai->semester)
-                                    ->label('PPKN')
+                                    ->label('Pendidikan Pancasila')
                                     ->content($nilai->nilai_ppkn ?? '-'),
                                     
                                 Placeholder::make('bindo_' . $nilai->semester)
@@ -794,7 +794,7 @@ class VerifikasiPendaftaran extends Page implements HasForms
                                     ->content($nilai->nilai_bahasa_inggris ?? '-'),
                                     
                                 Placeholder::make('senbud_' . $nilai->semester)
-                                    ->label('Seni Budaya')
+                                    ->label('Seni Budaya dan Prakarya')
                                     ->content($nilai->nilai_seni_budaya ?? '-'),
                                     
                                 Placeholder::make('pjok_' . $nilai->semester)
@@ -802,7 +802,7 @@ class VerifikasiPendaftaran extends Page implements HasForms
                                     ->content($nilai->nilai_pjok ?? '-'),
                                     
                                 Placeholder::make('prakarya_' . $nilai->semester)
-                                    ->label('Prakarya')
+                                    ->label('Informatika')
                                     ->content($nilai->nilai_prakarya ?? '-'),
                             ]),
                     ])
